@@ -3,7 +3,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
-from utils import call_llm
+import json
+from datetime import datetime
+from utils import call_llm, generate_html_page
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -15,13 +17,110 @@ async def form_get(request: Request):
 
 @app.post("/", response_class=HTMLResponse)
 async def form_post(request: Request, user_input: str = Form(...)):
-    print(f"收到用户输入: {user_input[:50]}...")  # 日志记录
+    print(f"收到用户输入: {user_input[:50]}...")
     
-    with open("prompts/system_prompt.txt", "r", encoding="utf-8") as f:
-        system_prompt = f.read()
+    try:
+        # 第一步：生成事件分析内容
+        with open("prompts/system_prompt.txt", "r", encoding="utf-8") as f:
+            system_prompt = f.read()
 
-    print("开始调用LLM...")  # 日志记录
-    result = call_llm(user_input, system_prompt)
-    print(f"LLM响应完成，长度: {len(result)} 字符")  # 日志记录
-    
-    return templates.TemplateResponse("index.html", {"request": request, "result": result})
+        print("📊 第一步：开始生成事件分析...")
+        analysis_result = call_llm(user_input, system_prompt)
+        
+        if "❌" in analysis_result:
+            return templates.TemplateResponse("index.html", {"request": request, "result": analysis_result})
+        
+        print(f"✅ 事件分析完成，长度: {len(analysis_result)} 字符")
+        
+        # 保存分析结果到临时文件
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        temp_filename = f"temp_analysis_{timestamp}.txt"
+        temp_filepath = os.path.join("temp", temp_filename)
+        
+        # 确保temp目录存在
+        os.makedirs("temp", exist_ok=True)
+        
+        with open(temp_filepath, "w", encoding="utf-8") as f:
+            f.write(analysis_result)
+        
+        print(f"📝 分析结果已保存到: {temp_filepath}")
+        
+        # 第二步：生成专业HTML页面
+        print("🎨 第二步：开始生成专业HTML页面...")
+        html_content = generate_html_page(analysis_result)
+        
+        if "❌" in html_content:
+            return templates.TemplateResponse("index.html", {"request": request, "result": f"分析完成，但HTML生成失败：\n{html_content}"})
+        
+        print(f"✅ HTML页面生成完成，长度: {len(html_content)} 字符")
+        
+        # 保存生成的HTML
+        html_filename = f"generated_report_{timestamp}.html"
+        html_filepath = os.path.join("temp", html_filename)
+        
+        with open(html_filepath, "w", encoding="utf-8") as f:
+            f.write(html_content)
+        
+        print(f"🌐 HTML报告已保存到: {html_filepath}")
+        
+        # 创建元数据
+        metadata = {
+            "timestamp": timestamp,
+            "user_input": user_input,
+            "analysis_file": temp_filename,
+            "html_file": html_filename,
+            "analysis_length": len(analysis_result),
+            "html_length": len(html_content)
+        }
+        
+        # 返回生成的HTML内容
+        return HTMLResponse(content=html_content)
+        
+    except Exception as e:
+        error_msg = f"❌ 处理过程中发生错误: {str(e)}"
+        print(error_msg)
+        return templates.TemplateResponse("index.html", {"request": request, "result": error_msg})
+
+@app.get("/reports")
+async def list_reports():
+    """列出所有生成的报告"""
+    try:
+        if not os.path.exists("temp"):
+            return {"reports": []}
+        
+        files = os.listdir("temp")
+        html_files = [f for f in files if f.endswith('.html')]
+        html_files.sort(reverse=True)  # 最新的在前面
+        
+        reports = []
+        for html_file in html_files:
+            timestamp = html_file.replace('generated_report_', '').replace('.html', '')
+            reports.append({
+                "filename": html_file,
+                "timestamp": timestamp,
+                "url": f"/report/{html_file}"
+            })
+        
+        return {"reports": reports}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/reports/view", response_class=HTMLResponse)
+async def reports_page(request: Request):
+    """报告列表页面"""
+    return templates.TemplateResponse("reports.html", {"request": request})
+
+@app.get("/report/{filename}")
+async def get_report(filename: str):
+    """获取指定的报告"""
+    try:
+        filepath = os.path.join("temp", filename)
+        if not os.path.exists(filepath):
+            return HTMLResponse(content="<h1>报告未找到</h1>", status_code=404)
+        
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        return HTMLResponse(content=content)
+    except Exception as e:
+        return HTMLResponse(content=f"<h1>错误: {str(e)}</h1>", status_code=500)

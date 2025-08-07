@@ -3,45 +3,394 @@
 <head>
     <title>事件分析 · DeepSeek</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: sans-serif; margin: 40px; max-width: 800px; }
-        textarea { width: 100%; height: 100px; font-size: 16px; padding: 10px; border: 2px solid #ddd; border-radius: 5px; }
-        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        button:disabled { background: #6c757d; cursor: not-allowed; }
-        pre { background: #f8f8f8; padding: 20px; white-space: pre-wrap; border-radius: 5px; border: 1px solid #ddd; }
-        .loading { color: #007bff; font-weight: bold; }
-        .form-container { margin-bottom: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-section {
+            margin-bottom: 40px;
+        }
+        
+        .form-section label {
+            display: block;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            font-size: 16px;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 15px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin: 20px 0;
+            border-left: 4px solid #1976d2;
+        }
+        
+        .step-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            transition: opacity 0.3s;
+        }
+        
+        .step-number {
+            background: #1976d2;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+        
+        .step-text {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .step-detail {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-left: 10px;
+        }
+        
+        .results-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .section-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--section-color);
+            transition: transform 0.2s;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .event-card { --section-color: #f44336; }
+        .situation-card { --section-color: #ff9800; }
+        .structure-card { --section-color: #4caf50; }
+        .investment-card { --section-color: #2196f3; }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f5f5f5;
+        }
+        
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2em;
+            color: white;
+        }
+        
+        .event-card .section-icon { background: #f44336; }
+        .situation-card .section-icon { background: #ff9800; }
+        .structure-card .section-icon { background: #4caf50; }
+        .investment-card .section-icon { background: #2196f3; }
+        
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .section-content {
+            line-height: 1.8;
+            color: #555;
+            font-size: 1em;
+        }
+        
+        .section-content ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .section-content li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #c62828;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .section-card {
+                padding: 20px;
+            }
+        }
     </style>
     <script>
         function showLoading() {
             const button = document.getElementById('submit-btn');
             const loadingDiv = document.getElementById('loading');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            
             button.disabled = true;
-            button.textContent = '分析中...';
+            button.textContent = '🤖 AI分析中...';
             loadingDiv.style.display = 'block';
+            
+            // 滚动到加载区域
+            loadingDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // 模拟步骤进度
+            setTimeout(() => {
+                step1.style.opacity = '1';
+                step2.style.opacity = '0.5';
+                step1.querySelector('.step-text').textContent = '✅ 事件分析完成';
+                step2.style.opacity = '1';
+                step2.querySelector('.step-text').textContent = '🎨 正在生成专业报告...';
+            }, 15000); // 15秒后模拟第一步完成
+        }
+        
+        function formatResult(text) {
+            // 格式化结果文本，添加适当的HTML标记
+            return text
+                .replace(/【🟥 事件（Event）】/g, '<div class="section-marker event">🟥 事件（Event）</div>')
+                .replace(/【🟧 局面（Situation）】/g, '<div class="section-marker situation">🟧 局面（Situation）</div>')
+                .replace(/【🟩 结构（Structure）】/g, '<div class="section-marker structure">🟩 结构（Structure）</div>')
+                .replace(/【💹 投资映射（Investor Lens）】/g, '<div class="section-marker investment">💹 投资映射（Investor Lens）</div>');
         }
     </script>
 </head>
 <body>
-    <h1>🧠 热点事件分析器</h1>
-    
-    <div class="form-container">
-        <form method="post" onsubmit="showLoading()">
-            <label>输入一个热点事件描述：</label><br><br>
-            <textarea name="user_input" placeholder="例如：美联储加息对全球股市的影响..." required></textarea><br><br>
-            <button type="submit" id="submit-btn">🔍 开始分析</button>
-        </form>
-    </div>
-    
-    <div id="loading" style="display: none;" class="loading">
-        ⏳ 正在分析中，请稍候...（AI正在思考，通常需要10-30秒）
-    </div>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 智能事件分析器</h1>
+            <p>基于 DeepSeek AI 的专业投资分析平台</p>
+            <div style="margin-top: 15px;">
+                <a href="/reports/view" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9em;">
+                    📊 查看历史报告
+                </a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <form method="post" onsubmit="showLoading()">
+                    <label>📊 输入热点事件描述</label>
+                    <textarea name="user_input" placeholder="例如：美联储加息对全球股市的影响、新能源汽车行业发展趋势、AI技术对传统行业的冲击..." required></textarea>
+                    <button type="submit" id="submit-btn" class="submit-btn">🔍 开始深度分析</button>
+                </form>
+            </div>
+            
+            <div id="loading" style="display: none;" class="loading">
+                <div id="step-indicator">
+                    <div id="step1" class="step-info">
+                        <span class="step-number">1</span>
+                        <span class="step-text">🧠 AI正在进行事件分析...</span>
+                        <div class="step-detail">分析事件、局面、结构、投资四个维度</div>
+                    </div>
+                    <div id="step2" class="step-info" style="opacity: 0.5;">
+                        <span class="step-number">2</span>
+                        <span class="step-text">🎨 生成专业分析报告...</span>
+                        <div class="step-detail">使用最新技术栈生成可视化页面</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.9em; opacity: 0.8;">
+                    整个过程预计需要30-60秒，请耐心等待...
+                </div>
+            </div>
 
-    {% if result %}
-        <hr>
-        <h2>🔍 分析结果：</h2>
-        <pre>{{ result }}</pre>
-    {% endif %}
+            {% if result %}
+            <div class="results-section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #333; font-size: 1.8em;">� 分析报告</h2>
+                
+                {% set sections = result.split('【') %}
+                {% for section in sections %}
+                    {% if '事件（Event）】' in section %}
+                        <div class="section-card event-card">
+                            <div class="section-header">
+                                <div class="section-icon">🟥</div>
+                                <div class="section-title">事件分析 (Event)</div>
+                            </div>
+                            <div class="section-content">
+                                {{ section.replace('🟥 事件（Event）】', '') | safe }}
+                            </div>
+                        </div>
+                    {% elif '局面（Situation）】' in section %}
+                        <div class="section-card situation-card">
+                            <div class="section-header">
+                                <div class="section-icon">🟧</div>
+                                <div class="section-title">局面解读 (Situation)</div>
+                            </div>
+                            <div class="section-content">
+                                {{ section.replace('🟧 局面（Situation）】', '') | safe }}
+                            </div>
+                        </div>
+                    {% elif '结构（Structure）】' in section %}
+                        <div class="section-card structure-card">
+                            <div class="section-header">
+                                <div class="section-icon">🟩</div>
+                                <div class="section-title">结构洞察 (Structure)</div>
+                            </div>
+                            <div class="section-content">
+                                {{ section.replace('🟩 结构（Structure）】', '') | safe }}
+                            </div>
+                        </div>
+                    {% elif '投资映射（Investor Lens）】' in section %}
+                        <div class="section-card investment-card">
+                            <div class="section-header">
+                                <div class="section-icon">💹</div>
+                                <div class="section-title">投资建议 (Investment Lens)</div>
+                            </div>
+                            <div class="section-content">
+                                {{ section.replace('💹 投资映射（Investor Lens）】', '') | safe }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if '❌' in result %}
+                    <div class="error-message">
+                        {{ result | safe }}
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>
