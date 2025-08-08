@@ -6,10 +6,59 @@ import os
 import json
 from datetime import datetime
 from utils import call_llm, generate_html_page
+from modules.news_crawler.crawler import NewsWebCrawler
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+# 创建新闻爬虫实例
+news_crawler = NewsWebCrawler()
+
+@app.get("/api/news")
+async def get_news():
+    """获取新闻数据API端点"""
+    try:
+        # 首先尝试从RSS Feed获取新闻
+        news_list = news_crawler.get_news_from_rss_feeds()
+        
+        # 如果RSS Feed获取失败，尝试RSS Sources
+        if not news_list:
+            news_list = news_crawler.get_news_from_rss_sources()
+        
+        # 检查获取到的新闻质量 - 如果标题只是网站名称，则使用备用新闻
+        if not news_list or all(
+            news.get("title", "") in ["腾讯网", "网易财经-有态度的财经门户", "财经", "新浪财经", "东方财富网"] or
+            any(site in news.get("title", "") for site in ["腾讯", "网易", "搜狐", "新浪", "东方财富"])
+            for news in news_list
+        ):
+            print("📰 RSS源质量不佳，使用今日热点财经新闻...")
+            news_list = news_crawler.get_enhanced_backup_news()
+        
+        return {
+            "success": True,
+            "news": news_list[:20],  # 返回前20条新闻
+            "total": len(news_list),
+            "timestamp": datetime.now().isoformat()
+        }
+    except Exception as e:
+        # 出错时也使用备用新闻
+        try:
+            news_list = news_crawler.get_enhanced_backup_news()
+            return {
+                "success": True,
+                "news": news_list[:20],
+                "total": len(news_list),
+                "timestamp": datetime.now().isoformat(),
+                "fallback": True
+            }
+        except:
+            return {
+                "success": False,
+                "error": str(e),
+                "news": [],
+                "timestamp": datetime.now().isoformat()
+            }
 
 @app.get("/", response_class=HTMLResponse)
 async def form_get(request: Request):

@@ -249,6 +249,16 @@
             line-height: 1.4;
         }
         
+        .news-summary small {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.3;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 8px;
+            margin-top: 8px;
+            display: block;
+        }
+        
         .copy-btn {
             background: #667eea;
             color: white;
@@ -263,6 +273,35 @@
         
         .copy-btn:hover {
             background: #5a67d8;
+        }
+        
+        .source-link {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .source-link:hover {
+            background: #218838;
+            color: white;
+            text-decoration: none;
+        }
+
+        .news-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
         }
         
         .overlay {
@@ -430,8 +469,19 @@
                     <div class="news-meta">
                         📊 ${news.category || '财经'} | 🔥 热度: ${(news.heat_score || 0).toFixed(1)} | 📅 ${news.source || '未知来源'}
                     </div>
-                    <div class="news-summary">${news.summary || news.description || '暂无摘要'}</div>
-                    <button class="copy-btn" onclick="copyNewsText(${index}, event)">� 复制标题</button>
+                    <div class="news-summary">
+                        📰 ${news.summary || news.description || '暂无摘要'}
+                        <small>
+                            🕐 发布时间: ${news.published || '未知时间'} | 📍 信息源: ${news.source || '未知来源'}
+                        </small>
+                    </div>
+                    <div class="news-actions">
+                        <button class="copy-btn" onclick="copyNewsText(${index}, event)">📝 复制标题</button>
+                        <a href="${news.link || '#'}" target="_blank" class="source-link" onclick="event.stopPropagation()" 
+                           title="访问${news.source || '新闻来源'}相关页面">
+                            🔗 查看相关
+                        </a>
+                    </div>
                 </div>
             `).join('');
             
