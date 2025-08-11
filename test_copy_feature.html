@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复制新闻功能测试</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; }
+        .news-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .copy-btn { background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+        .copy-btn:hover { background: #0056b3; }
+        textarea { width: 100%; height: 200px; margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        .demo-news { background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🔥 新闻复制功能测试</h1>
+    
+    <div class="demo-news">
+        <h3>示例新闻格式</h3>
+        <p><strong>标题：</strong>英伟达与AMD将向美国政府上缴在华芯片销售收入的15%</p>
+        <p><strong>时间：</strong>2025-08-10 16:00:00</p>
+        <p><strong>来源：</strong>FT中文网</p>
+        <p><strong>概述：</strong>两家芯片制造商同意达成这项不寻常的财务安排，以从特朗普政府获得芯片出口许可。</p>
+        <button class="copy-btn" onclick="testCopyFunction()">📝 复制新闻</button>
+    </div>
+    
+    <h3>复制结果预览：</h3>
+    <textarea id="copyResult" placeholder="点击上方按钮，复制的内容将显示在这里..."></textarea>
+    
+    <h3>🎯 功能特点：</h3>
+    <ul>
+        <li>✅ 按钮文本从"复制标题"更新为"复制新闻"</li>
+        <li>✅ 复制内容包含：标题 + 发布时间 + 信息来源 + 新闻概述</li>
+        <li>✅ 自动添加分析提示词</li>
+        <li>✅ 格式化为易读的提示词格式</li>
+    </ul>
+    
+    <script>
+        function testCopyFunction() {
+            // 模拟新闻数据
+            const news = {
+                title: "英伟达与AMD将向美国政府上缴在华芯片销售收入的15%",
+                published: "2025-08-10 16:00:00",
+                source: "FT中文网",
+                summary: "两家芯片制造商同意达成这项不寻常的财务安排，以从特朗普政府获得芯片出口许可。"
+            };
+            
+            // 构建完整的新闻信息（与实际代码相同）
+            const newsTitle = news.title || '无标题';
+            const newsTime = news.published || '未知时间';
+            const newsSummary = news.summary || '暂无概述';
+            const newsSource = news.source || '未知来源';
+            
+            // 整合新闻信息为提示词格式
+            const fullNewsContent = `新闻标题：${newsTitle}
+发布时间：${newsTime}
+信息来源：${newsSource}
+新闻概述：${newsSummary}
+
+请分析这条财经新闻的影响和意义。`;
+            
+            document.getElementById('copyResult').value = fullNewsContent;
+            
+            // 显示成功提示
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ 已复制';
+            btn.style.background = '#28a745';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '#007bff';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

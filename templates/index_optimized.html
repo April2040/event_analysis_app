@@ -477,9 +477,8 @@
                     </div>
                     <div class="news-actions">
                         <button class="copy-btn" onclick="copyNewsText(${index}, event)">📝 复制新闻</button>
-                        <a href="${news.link || '#'}" target="_blank" class="source-link" onclick="event.stopPropagation()" 
-                           title="访问${news.source || '新闻来源'}相关页面">
-                            🔗 查看相关
+                        <a href="${news.link || '#'}" target="_blank" class="source-link" onclick="event.stopPropagation()">
+                            🔗 查看原文
                         </a>
                     </div>
                 </div>
