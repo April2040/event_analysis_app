@@ -73,7 +73,14 @@ class NewsWebCrawler:
                     return True
         
         # 检查是否包含基础财经词汇
-        basic_finance_words = ["财经", "经济", "金融", "股票", "投资", "市场", "银行", "证券", "基金", "汇率", "GDP"]
+        basic_finance_words = [
+            "财经", "经济", "金融", "股票", "投资", "市场", "银行", "证券", "基金", "汇率", "GDP",
+            "税收", "税法", "增值税", "所得税", "关税", "财政", "预算", "货币", "通胀", "通缩",
+            "利率", "债券", "期货", "外汇", "保险", "房地产", "贸易", "进出口", "消费", "零售",
+            "制造业", "工业", "服务业", "农业", "能源", "石油", "黄金", "大宗商品", "供应链",
+            "企业", "公司", "集团", "上市", "IPO", "并购", "重组", "破产", "融资", "借贷",
+            "央行", "美联储", "欧央行", "人民银行", "监管", "政策", "改革", "开放", "发展"
+        ]
         for word in basic_finance_words:
             if word in text_lower:
                 return True
@@ -92,6 +99,10 @@ class NewsWebCrawler:
                 
                 response = self.session.get(config["url"], timeout=15)
                 response.raise_for_status()
+                
+                # 确保正确的中文编码
+                if response.encoding.lower() in ['iso-8859-1', 'ascii']:
+                    response.encoding = 'utf-8'
                 
                 # 根据类型解析内容
                 if config["type"] == "xml":
@@ -398,9 +409,9 @@ class NewsWebCrawler:
         
         return backup_news
     
-    def get_top_hotspots(self, limit: int = 10, use_backup: bool = True) -> List[Dict]:
-        """获取热点新闻"""
-        print("🌟 开始获取热点财经新闻...")
+    def get_top_hotspots(self, limit: int = 10) -> List[Dict]:
+        """获取热点新闻 - 仅真实RSS新闻，不混合备用数据"""
+        print("🌟 开始获取真实RSS热点财经新闻...")
         
         # 首先尝试从RSS Feed获取新闻
         news_list = self.get_news_from_rss_feeds()
@@ -410,29 +421,45 @@ class NewsWebCrawler:
             print("🔄 RSS Feed获取失败，尝试RSS Sources...")
             news_list = self.get_news_from_rss_sources()
         
-        # 检查获取到的新闻质量 - 如果只是网站名称，使用备用新闻
-        if not news_list or all(
-            news.get("title", "") in ["腾讯网", "网易财经-有态度的财经门户", "财经", "新浪财经", "东方财富网"] or
-            any(site in news.get("title", "") for site in ["腾讯", "网易", "搜狐", "新浪", "东方财富"])
-            for news in news_list
-        ):
-            if use_backup:
-                print("📰 使用当日热点财经新闻...")
-                news_list = self.get_enhanced_backup_news()
+        # 只检查是否有有效的真实新闻
+        if not news_list:
+            print("❌ 未能获取到真实RSS新闻")
+            return []
         
-        # 如果仍然没有足够新闻且允许使用备用数据
-        if len(news_list) < limit // 2 and use_backup:
-            backup_news = self.get_backup_news()
-            news_list.extend(backup_news)
-            print(f"📰 合并备用新闻，当前共 {len(news_list)} 条")
+        # 过滤掉低质量新闻（只是网站名称的）
+        filtered_news = []
+        for news in news_list:
+            title = news.get("title", "").strip()
+            if title and title not in ["腾讯网", "网易财经-有态度的财经门户", "财经", "新浪财经", "东方财富网"]:
+                # 检查标题是否包含实际内容而不只是网站名
+                if not any(site in title for site in ["腾讯", "网易", "搜狐", "新浪", "东方财富"]) or len(title) > 10:
+                    filtered_news.append(news)
         
-        # 按热度分数排序
-        news_list.sort(key=lambda x: x.get("heat_score", 0), reverse=True)
+        # 为真实新闻设置优先级权重
+        for news in filtered_news:
+            base_score = news.get("heat_score", 0)
+            link = news.get("link", "")
+            
+            # FT中文网优先级最高
+            if "ftchinese.com" in link:
+                news["priority_score"] = base_score + 1000
+            # 中新网次优先级
+            elif "chinanews.com" in link:
+                news["priority_score"] = base_score + 800
+            # 其他真实RSS来源
+            else:
+                news["priority_score"] = base_score + 500
         
-        # 返回指定数量的热点新闻
-        top_news = news_list[:limit]
+        # 按优先级分数排序（真实新闻内部排序）
+        filtered_news.sort(key=lambda x: x.get("priority_score", 0), reverse=True)
         
-        print(f"✨ 成功获取 {len(top_news)} 条热点新闻")
+        # 返回指定数量的真实热点新闻
+        top_news = filtered_news[:limit]
+        
+        print(f"✨ 成功获取 {len(top_news)} 条真实RSS热点新闻")
+        if top_news:
+            print(f"📑 新闻来源: {', '.join(set(news.get('source', '未知') for news in top_news))}")
+        
         return top_news
     
     def generate_html_report(self, news_list: List[Dict]) -> str:

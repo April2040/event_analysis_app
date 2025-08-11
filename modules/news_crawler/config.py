@@ -3,11 +3,19 @@ RSS源配置和评分权重配置
 """
 
 # 真正的RSS Feed源 - 仅使用可靠的RSS源
+# RSS新闻源配置
 RSS_FEEDS = {
-    "FT中文网": {
-        "url": "http://www.ftchinese.com/rss/feed",
-        "type": "xml",
-        "weight": 0.9
+    'ft_chinese': {
+        'url': 'https://www.ftchinese.com/rss/news',
+        'source': 'FT中文网',
+        'priority': 1,
+        'type': 'xml'
+    },
+    'chinanews': {
+        'url': 'https://www.chinanews.com.cn/rss/finance.xml',
+        'source': '中新网',
+        'priority': 2,
+        'type': 'xml'
     }
 }
 
