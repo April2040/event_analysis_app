@@ -45,6 +45,7 @@ news_cache = NewsCache()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/temp", StaticFiles(directory="temp"), name="temp")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
@@ -87,6 +88,16 @@ async def form_post(request: Request, user_input: str = Form(...), fast_mode: st
         
         print(f"💾 分析结果已保存到: {temp_filepath}")
         
+        # ✨ 新增：自动生成高级HTML可视化版本
+        advanced_html_filepath = None
+        try:
+            from utils_v2 import generate_advanced_html_auto
+            advanced_html_filepath = generate_advanced_html_auto(analysis_result, temp_filepath)
+            if advanced_html_filepath:
+                print(f"🎨 高级HTML可视化报告已生成: {advanced_html_filepath}")
+        except Exception as e:
+            print(f"⚠️ 自动生成高级HTML失败: {e}")
+        
         html_filename = None
         step2_time = 0
         
@@ -122,13 +133,23 @@ async def form_post(request: Request, user_input: str = Form(...), fast_mode: st
         # 处理HTML内容用于模板显示
         display_content = analysis_result
         
-        return templates.TemplateResponse("index.html", {
+        # 准备返回数据，包含高级HTML信息
+        template_data = {
             "request": request, 
             "result": display_content,
             "html_file": html_filename,
             "analysis_file": temp_filename,
             "processing_time": f"{total_time:.2f}秒"
-        })
+        }
+        
+        # 如果生成了高级HTML，添加相关信息
+        if advanced_html_filepath:
+            advanced_html_filename = os.path.basename(advanced_html_filepath)
+            template_data["advanced_html_file"] = advanced_html_filename
+            template_data["has_advanced_html"] = True
+            print(f"📊 高级可视化报告可用: {advanced_html_filename}")
+        
+        return templates.TemplateResponse("index.html", template_data)
         
     except FileNotFoundError:
         error_msg = "❌ 系统提示词文件未找到"

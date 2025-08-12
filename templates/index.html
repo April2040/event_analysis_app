@@ -391,6 +391,27 @@
         {% if result %}
         <div class="result-container">
             {{ result }}
+            
+            {% if has_advanced_html %}
+            <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; text-align: center;">
+                <div style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem;">
+                    🎨 高级可视化报告已生成
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/temp/{{ advanced_html_file }}" target="_blank" 
+                       style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                        📊 查看高级HTML报告
+                    </a>
+                    <a href="/temp/{{ analysis_file }}" target="_blank" 
+                       style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 500; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                        📄 下载TXT分析文件
+                    </a>
+                </div>
+                <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-top: 1rem;">
+                    💡 高级报告包含专业可视化、动画效果和响应式设计
+                </div>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>
