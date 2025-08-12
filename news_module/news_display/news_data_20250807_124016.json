@@ -1,0 +1,166 @@
+{
+  "timestamp": "2025-08-07T12:40:16.106149",
+  "total_count": 10,
+  "news_list": [
+    {
+      "id": "news_2_0",
+      "title": "比特币突破6万美元关口，加密货币市场总市值创历史新高",
+      "url": "https://example.com/news/2_0",
+      "source": "财联社",
+      "published_time": "2025-08-07 07:40:15",
+      "summary": "比特币突破6万美元关口，加密货币市场总市值创历史新高...",
+      "category": "数字货币",
+      "keywords": [
+        "比特币",
+        "加密货币",
+        "新高"
+      ],
+      "content_hash": "9be4cc62c29b484cf498d516c78a6456",
+      "heat_score": 62.0
+    },
+    {
+      "id": "news_10_1",
+      "title": "ESG投资理念深入人心，绿色金融产品规模突破10万亿",
+      "url": "https://example.com/news/10_1",
+      "source": "金融时报",
+      "published_time": "2025-08-06 19:40:15",
+      "summary": "ESG投资理念深入人心，绿色金融产品规模突破10万亿...",
+      "category": "绿色金融",
+      "keywords": [
+        "ESG",
+        "绿色金融",
+        "投资"
+      ],
+      "content_hash": "9a9c59f9ef4362f57619d3f2deccfa21",
+      "heat_score": 51.0
+    },
+    {
+      "id": "news_4_0",
+      "title": "人工智能芯片龙头企业发布新一代产品，算力提升300%",
+      "url": "https://example.com/news/4_0",
+      "source": "21世纪经济报道",
+      "published_time": "2025-08-07 06:40:15",
+      "summary": "人工智能芯片龙头企业发布新一代产品，算力提升300%...",
+      "category": "科技",
+      "keywords": [
+        "人工智能",
+        "芯片",
+        "算力"
+      ],
+      "content_hash": "ceba4bcec3a61b3178bce2b947dcfc94",
+      "heat_score": 49.0
+    },
+    {
+      "id": "news_6_0",
+      "title": "美联储主席重申渐进式加息立场，市场预期年内再加息两次",
+      "url": "https://example.com/news/6_0",
+      "source": "华尔街日报",
+      "published_time": "2025-08-06 02:40:15",
+      "summary": "美联储主席重申渐进式加息立场，市场预期年内再加息两次...",
+      "category": "货币政策",
+      "keywords": [
+        "美联储",
+        "加息",
+        "政策"
+      ],
+      "content_hash": "387f9bb01d06bf4d7ada4bed5639f1fe",
+      "heat_score": 47.0
+    },
+    {
+      "id": "news_8_1",
+      "title": "三季度GDP同比增长4.9%，经济复苏态势持续巩固",
+      "url": "https://example.com/news/8_1",
+      "source": "人民日报",
+      "published_time": "2025-08-06 07:40:15",
+      "summary": "三季度GDP同比增长4.9%，经济复苏态势持续巩固...",
+      "category": "宏观经济",
+      "keywords": [
+        "GDP",
+        "经济复苏",
+        "增长"
+      ],
+      "content_hash": "281e868c76bc95c43a0c1df0c661d886",
+      "heat_score": 43.0
+    },
+    {
+      "id": "news_6_1",
+      "title": "美联储主席重申渐进式加息立场，市场预期年内再加息两次",
+      "url": "https://example.com/news/6_1",
+      "source": "华尔街日报",
+      "published_time": "2025-08-05 03:40:15",
+      "summary": "美联储主席重申渐进式加息立场，市场预期年内再加息两次...",
+      "category": "货币政策",
+      "keywords": [
+        "美联储",
+        "加息",
+        "政策"
+      ],
+      "content_hash": "8b0aeb5233291cfded91cb30f35add9c",
+      "heat_score": 42.0
+    },
+    {
+      "id": "news_3_0",
+      "title": "新能源汽车销量同比增长156%，产业链上市公司业绩亮眼",
+      "url": "https://example.com/news/3_0",
+      "source": "证券时报",
+      "published_time": "2025-08-06 05:40:15",
+      "summary": "新能源汽车销量同比增长156%，产业链上市公司业绩亮眼...",
+      "category": "新能源",
+      "keywords": [
+        "新能源汽车",
+        "销量",
+        "产业链"
+      ],
+      "content_hash": "7da3ff163e9f1b1a55620c14b0551613",
+      "heat_score": 42.0
+    },
+    {
+      "id": "news_10_0",
+      "title": "ESG投资理念深入人心，绿色金融产品规模突破10万亿",
+      "url": "https://example.com/news/10_0",
+      "source": "金融时报",
+      "published_time": "2025-08-05 02:40:15",
+      "summary": "ESG投资理念深入人心，绿色金融产品规模突破10万亿...",
+      "category": "绿色金融",
+      "keywords": [
+        "ESG",
+        "绿色金融",
+        "投资"
+      ],
+      "content_hash": "927044e873559000f422adc8f8886ec8",
+      "heat_score": 41.0
+    },
+    {
+      "id": "news_7_1",
+      "title": "中美贸易数据超预期，双边贸易额创历史同期新高",
+      "url": "https://example.com/news/7_1",
+      "source": "路透社",
+      "published_time": "2025-08-06 22:40:15",
+      "summary": "中美贸易数据超预期，双边贸易额创历史同期新高...",
+      "category": "贸易",
+      "keywords": [
+        "中美贸易",
+        "贸易额",
+        "新高"
+      ],
+      "content_hash": "76e876b6faceacf3567772316292aa93",
+      "heat_score": 40.0
+    },
+    {
+      "id": "news_4_1",
+      "title": "人工智能芯片龙头企业发布新一代产品，算力提升300%",
+      "url": "https://example.com/news/4_1",
+      "source": "21世纪经济报道",
+      "published_time": "2025-08-06 07:40:15",
+      "summary": "人工智能芯片龙头企业发布新一代产品，算力提升300%...",
+      "category": "科技",
+      "keywords": [
+        "人工智能",
+        "芯片",
+        "算力"
+      ],
+      "content_hash": "55a8cd2acede3c42ce336d47a1309835",
+      "heat_score": 39.0
+    }
+  ]
+}

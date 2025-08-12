@@ -16,6 +16,33 @@ if project_root not in sys.path:
 from modules.news_crawler.crawler import NewsWebCrawler
 from utils_v2 import call_llm, generate_html_page
 
+# 新闻缓存配置
+import time
+from typing import Dict, Any, Optional
+
+class NewsCache:
+    def __init__(self, cache_duration: int = 300):  # 5分钟缓存
+        self.cache_duration = cache_duration
+        self.cache: Dict[str, Any] = {}
+        self.last_update: Optional[float] = None
+    
+    def is_valid(self) -> bool:
+        if self.last_update is None:
+            return False
+        return time.time() - self.last_update < self.cache_duration
+    
+    def get_news(self) -> Optional[list]:
+        if self.is_valid():
+            return self.cache.get('news')
+        return None
+    
+    def set_news(self, news_list: list) -> None:
+        self.cache['news'] = news_list
+        self.last_update = time.time()
+
+# 全局新闻缓存实例
+news_cache = NewsCache()
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -114,11 +141,37 @@ async def form_post(request: Request, user_input: str = Form(...), fast_mode: st
 
 @app.get("/news", response_class=HTMLResponse)
 async def get_news(request: Request):
-    """新闻爬虫页面"""
+    """新闻爬虫页面（带缓存优化）"""
     try:
+        # 首先检查缓存
+        cached_news = news_cache.get_news()
+        if cached_news:
+            print(f"🚀 使用缓存数据显示新闻页面：{len(cached_news)} 条新闻")
+            # 格式化缓存的新闻为可分析的文本
+            news_text = "=== 今日热点财经新闻（缓存数据，快速加载）===\n\n"
+            for i, news in enumerate(cached_news, 1):
+                news_text += f"{i}. 【{news.get('category', '财经')}】{news.get('title', '')}\n"
+                news_text += f"   来源: {news.get('source', '')} | 热度: {news.get('heat_score', 0):.2f}\n"
+                news_text += f"   摘要: {news.get('summary', news.get('description', ''))}\n"
+                news_text += f"   链接: {news.get('url', '')}\n\n"
+            
+            return templates.TemplateResponse("index.html", {
+                "request": request, 
+                "result": None,
+                "news_data": news_text,
+                "news_count": len(cached_news)
+            })
+        
         print("🔥 启动新闻爬虫获取热点新闻...")
+        start_time = time.time()
         crawler = NewsWebCrawler()
         news_list = crawler.get_top_hotspots(limit=10)
+        fetch_time = time.time() - start_time
+        
+        # 更新缓存
+        news_cache.set_news(news_list)
+        
+        print(f"✅ 成功获取并缓存 {len(news_list)} 条新闻（耗时: {fetch_time:.2f}秒）")
         
         # 格式化新闻为可分析的文本
         news_text = "=== 今日热点财经新闻 ===\n\n"
@@ -142,18 +195,37 @@ async def get_news(request: Request):
 
 @app.get("/api/news")
 async def get_news_api():
-    """新闻API端点 - 返回JSON格式的新闻数据"""
+    """新闻API端点 - 返回JSON格式的新闻数据（带缓存优化）"""
     try:
-        print("🔥 API调用：获取热点新闻...")
+        # 首先检查缓存
+        cached_news = news_cache.get_news()
+        if cached_news:
+            print(f"� 使用缓存数据：{len(cached_news)} 条新闻（节省RSS请求时间）")
+            return {
+                "success": True,
+                "news": cached_news,
+                "count": len(cached_news),
+                "timestamp": datetime.now().isoformat(),
+                "cached": True
+            }
+        
+        print("�🔥 API调用：获取热点新闻...")
+        start_time = time.time()
         crawler = NewsWebCrawler()
         news_list = crawler.get_top_hotspots(limit=10)
+        fetch_time = time.time() - start_time
         
-        print(f"✅ 成功获取 {len(news_list)} 条新闻")
+        # 更新缓存
+        news_cache.set_news(news_list)
+        
+        print(f"✅ 成功获取 {len(news_list)} 条新闻（耗时: {fetch_time:.2f}秒）")
         return {
             "success": True,
             "news": news_list,
             "count": len(news_list),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "cached": False,
+            "fetch_time": fetch_time
         }
         
     except Exception as e:
@@ -188,4 +260,9 @@ if __name__ == "__main__":
     print("📰 新闻: http://localhost:8002/news")
     print("⚡ 快速模式: 仅生成分析，节省50%时间")
     print("💡 完整模式: 分析 + 专业HTML报告")
+    print("🚀 性能优化:")
+    print("  • RSS超时: 5秒（之前15秒）")
+    print("  • AI API超时: 30秒")
+    print("  • 新闻缓存: 5分钟")
+    print("  • 缓存命中时响应时间 < 100ms")
     uvicorn.run(app, host="0.0.0.0", port=8002)

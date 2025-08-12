@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热点财经新闻榜单</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Microsoft YaHei', '微软雅黑', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .glass-effect { backdrop-filter: blur(16px); background: rgba(255, 255, 255, 0.95); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 头部标题 -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-white mb-4">
+                <i class="fas fa-newspaper mr-3"></i>热点财经新闻榜单
+            </h1>
+            <p class="text-xl text-blue-100">精选Top 10财经热点 · 实时更新</p>
+            <div class="mt-4 text-blue-200">
+                <i class="fas fa-clock mr-2"></i>更新时间: 2025年08月07日 12:40:16
+            </div>
+        </div>
+        
+        <!-- 统计概览 -->
+        <div class="glass-effect rounded-2xl p-6 mb-8 shadow-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-indigo-600">10</div>
+                    <div class="text-gray-600">热点新闻</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-purple-600">7</div>
+                    <div class="text-gray-600">新闻类别</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600">62.0</div>
+                    <div class="text-gray-600">最高热度</div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">📊 类别分布</h3>
+                <div class="flex flex-wrap">
+                    <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">绿色金融: 2条</span><span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">科技: 2条</span><span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">货币政策: 2条</span><span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">数字货币: 1条</span><span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">宏观经济: 1条</span><span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">新能源: 1条</span><span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">贸易: 1条</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 新闻列表 -->
+        <div class="glass-effect rounded-2xl p-6 shadow-2xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-trophy mr-3 text-yellow-500"></i>
+                热点新闻排行榜
+            </h2>
+            
+            <div class="space-y-4">
+                
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第1名</span>
+                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-semibold">🔥 62.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">数字货币</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">比特币突破6万美元关口，加密货币市场总市值创历史新高</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        财联社
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-07 07:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">比特币</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">加密货币</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">新高</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/2_0" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第2名</span>
+                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-semibold">🔥 51.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">绿色金融</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">ESG投资理念深入人心，绿色金融产品规模突破10万亿</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        金融时报
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-06 19:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">ESG</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">绿色金融</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">投资</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/10_1" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第3名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 49.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">科技</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">人工智能芯片龙头企业发布新一代产品，算力提升300%</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        21世纪经济报道
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-07 06:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">人工智能</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">芯片</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">算力</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/4_0" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第4名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 47.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">货币政策</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">美联储主席重申渐进式加息立场，市场预期年内再加息两次</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        华尔街日报
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-06 02:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">美联储</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">加息</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">政策</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/6_0" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第5名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 43.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">宏观经济</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">三季度GDP同比增长4.9%，经济复苏态势持续巩固</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        人民日报
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-06 07:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">GDP</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">经济复苏</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">增长</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/8_1" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第6名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 42.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">货币政策</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">美联储主席重申渐进式加息立场，市场预期年内再加息两次</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        华尔街日报
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-05 03:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">美联储</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">加息</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">政策</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/6_1" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第7名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 42.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">新能源</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">新能源汽车销量同比增长156%，产业链上市公司业绩亮眼</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        证券时报
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-06 05:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">新能源汽车</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">销量</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">产业链</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/3_0" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第8名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 41.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">绿色金融</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">ESG投资理念深入人心，绿色金融产品规模突破10万亿</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        金融时报
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-05 02:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">ESG</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">绿色金融</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">投资</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/10_0" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第9名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 40.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">贸易</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">中美贸易数据超预期，双边贸易额创历史同期新高</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        路透社
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-06 22:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">中美贸易</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">贸易额</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">新高</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/7_1" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <span class="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">第10名</span>
+                        <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-semibold">💫 39.0分</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">科技</span>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 leading-tight">人工智能芯片龙头企业发布新一代产品，算力提升300%</h3>
+                
+                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-3">
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-newspaper mr-1"></i>
+                        21世纪经济报道
+                    </span>
+                    <span class="flex items-center mr-4">
+                        <i class="fas fa-clock mr-1"></i>
+                        2025-08-06 07:40:15
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="text-sm text-gray-500 mr-2">关键词:</span>
+                    <span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">人工智能</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">芯片</span><span class="inline-block bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs mr-1">算力</span>
+                </div>
+                
+                <div class="border-t pt-3">
+                    <a href="https://example.com/news/4_1" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                        <i class="fas fa-external-link-alt mr-1"></i>
+                        查看完整新闻
+                    </a>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+        
+        <!-- 底部信息 -->
+        <div class="text-center mt-8">
+            <div class="inline-flex items-center bg-green-500 text-white px-6 py-3 rounded-full shadow-lg">
+                <i class="fas fa-check-circle mr-2"></i>
+                新闻展示完成 · 共10条热点
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 添加加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.bg-white');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>

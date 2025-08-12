@@ -1,0 +1,167 @@
+{
+  "timestamp": "2025-08-07T12:29:17.278954",
+  "total_count": 10,
+  "crawl_method": "mock_simulation",
+  "news_list": [
+    {
+      "id": "news_6_0",
+      "title": "美联储主席重申渐进式加息立场，市场预期年内再加息两次",
+      "url": "https://example.com/news/6_0",
+      "source": "华尔街日报",
+      "published_time": "2025-08-07 03:29:16",
+      "summary": "美联储主席重申渐进式加息立场，市场预期年内再加息两次...",
+      "category": "货币政策",
+      "keywords": [
+        "美联储",
+        "加息",
+        "政策"
+      ],
+      "content_hash": "387f9bb01d06bf4d7ada4bed5639f1fe",
+      "heat_score": 57.0
+    },
+    {
+      "id": "news_2_1",
+      "title": "比特币突破6万美元关口，加密货币市场总市值创历史新高",
+      "url": "https://example.com/news/2_1",
+      "source": "财联社",
+      "published_time": "2025-08-07 02:29:16",
+      "summary": "比特币突破6万美元关口，加密货币市场总市值创历史新高...",
+      "category": "数字货币",
+      "keywords": [
+        "比特币",
+        "加密货币",
+        "新高"
+      ],
+      "content_hash": "392c340d1ceae0f321a0dd0cdccb5917",
+      "heat_score": 57.0
+    },
+    {
+      "id": "news_6_1",
+      "title": "美联储主席重申渐进式加息立场，市场预期年内再加息两次",
+      "url": "https://example.com/news/6_1",
+      "source": "华尔街日报",
+      "published_time": "2025-08-07 00:29:16",
+      "summary": "美联储主席重申渐进式加息立场，市场预期年内再加息两次...",
+      "category": "货币政策",
+      "keywords": [
+        "美联储",
+        "加息",
+        "政策"
+      ],
+      "content_hash": "8b0aeb5233291cfded91cb30f35add9c",
+      "heat_score": 52.0
+    },
+    {
+      "id": "news_3_0",
+      "title": "新能源汽车销量同比增长156%，产业链上市公司业绩亮眼",
+      "url": "https://example.com/news/3_0",
+      "source": "证券时报",
+      "published_time": "2025-08-06 17:29:16",
+      "summary": "新能源汽车销量同比增长156%，产业链上市公司业绩亮眼...",
+      "category": "新能源",
+      "keywords": [
+        "新能源汽车",
+        "销量",
+        "产业链"
+      ],
+      "content_hash": "7da3ff163e9f1b1a55620c14b0551613",
+      "heat_score": 47.0
+    },
+    {
+      "id": "news_0_1",
+      "title": "美股三大指数集体收涨，科技股领涨纳斯达克指数上涨2.1%",
+      "url": "https://example.com/news/0_1",
+      "source": "第一财经",
+      "published_time": "2025-08-06 19:29:16",
+      "summary": "美股三大指数集体收涨，科技股领涨纳斯达克指数上涨2.1%...",
+      "category": "股市",
+      "keywords": [
+        "美股",
+        "科技股",
+        "纳斯达克"
+      ],
+      "content_hash": "5be2502b2c0aaeef798a5d630be1c467",
+      "heat_score": 45.0
+    },
+    {
+      "id": "news_5_1",
+      "title": "房地产政策现边际宽松信号，一线城市楼市成交量回暖",
+      "url": "https://example.com/news/5_1",
+      "source": "经济观察报",
+      "published_time": "2025-08-07 09:29:16",
+      "summary": "房地产政策现边际宽松信号，一线城市楼市成交量回暖...",
+      "category": "房地产",
+      "keywords": [
+        "房地产",
+        "政策",
+        "楼市"
+      ],
+      "content_hash": "a0becd208c466221ce3f86ca9a31a4f8",
+      "heat_score": 45.0
+    },
+    {
+      "id": "news_4_1",
+      "title": "人工智能芯片龙头企业发布新一代产品，算力提升300%",
+      "url": "https://example.com/news/4_1",
+      "source": "21世纪经济报道",
+      "published_time": "2025-08-06 21:29:16",
+      "summary": "人工智能芯片龙头企业发布新一代产品，算力提升300%...",
+      "category": "科技",
+      "keywords": [
+        "人工智能",
+        "芯片",
+        "算力"
+      ],
+      "content_hash": "55a8cd2acede3c42ce336d47a1309835",
+      "heat_score": 44.0
+    },
+    {
+      "id": "news_1_0",
+      "title": "央行决定下调存款准备金率0.5个百分点，释放流动性约1万亿元",
+      "url": "https://example.com/news/1_0",
+      "source": "新华财经",
+      "published_time": "2025-08-06 03:29:16",
+      "summary": "央行决定下调存款准备金率0.5个百分点，释放流动性约1万亿元...",
+      "category": "货币政策",
+      "keywords": [
+        "央行",
+        "降准",
+        "流动性"
+      ],
+      "content_hash": "f4cce45d81f90f1fd731853d7d80ca7e",
+      "heat_score": 42.0
+    },
+    {
+      "id": "news_2_0",
+      "title": "比特币突破6万美元关口，加密货币市场总市值创历史新高",
+      "url": "https://example.com/news/2_0",
+      "source": "财联社",
+      "published_time": "2025-08-05 06:29:16",
+      "summary": "比特币突破6万美元关口，加密货币市场总市值创历史新高...",
+      "category": "数字货币",
+      "keywords": [
+        "比特币",
+        "加密货币",
+        "新高"
+      ],
+      "content_hash": "9be4cc62c29b484cf498d516c78a6456",
+      "heat_score": 42.0
+    },
+    {
+      "id": "news_5_0",
+      "title": "房地产政策现边际宽松信号，一线城市楼市成交量回暖",
+      "url": "https://example.com/news/5_0",
+      "source": "经济观察报",
+      "published_time": "2025-08-07 06:29:16",
+      "summary": "房地产政策现边际宽松信号，一线城市楼市成交量回暖...",
+      "category": "房地产",
+      "keywords": [
+        "房地产",
+        "政策",
+        "楼市"
+      ],
+      "content_hash": "79a1e5ae7f3d670e26f316d61abea58d",
+      "heat_score": 40.0
+    }
+  ]
+}

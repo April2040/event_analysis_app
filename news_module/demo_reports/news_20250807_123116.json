@@ -1,0 +1,162 @@
+[
+  {
+    "id": "news_2_1",
+    "title": "比特币突破6万美元关口，加密货币市场总市值创历史新高",
+    "url": "https://example.com/news/2_1",
+    "source": "财联社",
+    "published_time": "2025-08-07 10:31:15",
+    "summary": "比特币突破6万美元关口，加密货币市场总市值创历史新高...",
+    "category": "数字货币",
+    "keywords": [
+      "比特币",
+      "加密货币",
+      "新高"
+    ],
+    "content_hash": "392c340d1ceae0f321a0dd0cdccb5917",
+    "heat_score": 62.0
+  },
+  {
+    "id": "news_6_0",
+    "title": "美联储主席重申渐进式加息立场，市场预期年内再加息两次",
+    "url": "https://example.com/news/6_0",
+    "source": "华尔街日报",
+    "published_time": "2025-08-07 03:31:15",
+    "summary": "美联储主席重申渐进式加息立场，市场预期年内再加息两次...",
+    "category": "货币政策",
+    "keywords": [
+      "美联储",
+      "加息",
+      "政策"
+    ],
+    "content_hash": "387f9bb01d06bf4d7ada4bed5639f1fe",
+    "heat_score": 57.0
+  },
+  {
+    "id": "news_6_1",
+    "title": "美联储主席重申渐进式加息立场，市场预期年内再加息两次",
+    "url": "https://example.com/news/6_1",
+    "source": "华尔街日报",
+    "published_time": "2025-08-07 05:31:15",
+    "summary": "美联储主席重申渐进式加息立场，市场预期年内再加息两次...",
+    "category": "货币政策",
+    "keywords": [
+      "美联储",
+      "加息",
+      "政策"
+    ],
+    "content_hash": "8b0aeb5233291cfded91cb30f35add9c",
+    "heat_score": 57.0
+  },
+  {
+    "id": "news_8_1",
+    "title": "三季度GDP同比增长4.9%，经济复苏态势持续巩固",
+    "url": "https://example.com/news/8_1",
+    "source": "人民日报",
+    "published_time": "2025-08-06 19:31:15",
+    "summary": "三季度GDP同比增长4.9%，经济复苏态势持续巩固...",
+    "category": "宏观经济",
+    "keywords": [
+      "GDP",
+      "经济复苏",
+      "增长"
+    ],
+    "content_hash": "281e868c76bc95c43a0c1df0c661d886",
+    "heat_score": 48.0
+  },
+  {
+    "id": "news_10_0",
+    "title": "ESG投资理念深入人心，绿色金融产品规模突破10万亿",
+    "url": "https://example.com/news/10_0",
+    "source": "金融时报",
+    "published_time": "2025-08-06 00:31:15",
+    "summary": "ESG投资理念深入人心，绿色金融产品规模突破10万亿...",
+    "category": "绿色金融",
+    "keywords": [
+      "ESG",
+      "绿色金融",
+      "投资"
+    ],
+    "content_hash": "927044e873559000f422adc8f8886ec8",
+    "heat_score": 46.0
+  },
+  {
+    "id": "news_11_0",
+    "title": "短视频平台广告收入暴增，数字营销产业迎来黄金期",
+    "url": "https://example.com/news/11_0",
+    "source": "财新",
+    "published_time": "2025-08-07 01:31:15",
+    "summary": "短视频平台广告收入暴增，数字营销产业迎来黄金期...",
+    "category": "数字经济",
+    "keywords": [
+      "短视频",
+      "广告",
+      "数字营销"
+    ],
+    "content_hash": "1044b3180767516cb3897a35a8030c98",
+    "heat_score": 43.0
+  },
+  {
+    "id": "news_8_0",
+    "title": "三季度GDP同比增长4.9%，经济复苏态势持续巩固",
+    "url": "https://example.com/news/8_0",
+    "source": "人民日报",
+    "published_time": "2025-08-05 20:31:15",
+    "summary": "三季度GDP同比增长4.9%，经济复苏态势持续巩固...",
+    "category": "宏观经济",
+    "keywords": [
+      "GDP",
+      "经济复苏",
+      "增长"
+    ],
+    "content_hash": "85c377e71a025d7f0f3418be37b087eb",
+    "heat_score": 43.0
+  },
+  {
+    "id": "news_2_0",
+    "title": "比特币突破6万美元关口，加密货币市场总市值创历史新高",
+    "url": "https://example.com/news/2_0",
+    "source": "财联社",
+    "published_time": "2025-08-05 11:31:15",
+    "summary": "比特币突破6万美元关口，加密货币市场总市值创历史新高...",
+    "category": "数字货币",
+    "keywords": [
+      "比特币",
+      "加密货币",
+      "新高"
+    ],
+    "content_hash": "9be4cc62c29b484cf498d516c78a6456",
+    "heat_score": 42.0
+  },
+  {
+    "id": "news_3_1",
+    "title": "新能源汽车销量同比增长156%，产业链上市公司业绩亮眼",
+    "url": "https://example.com/news/3_1",
+    "source": "证券时报",
+    "published_time": "2025-08-05 21:31:15",
+    "summary": "新能源汽车销量同比增长156%，产业链上市公司业绩亮眼...",
+    "category": "新能源",
+    "keywords": [
+      "新能源汽车",
+      "销量",
+      "产业链"
+    ],
+    "content_hash": "f91f5b351878543d63eececf668d475d",
+    "heat_score": 42.0
+  },
+  {
+    "id": "news_1_0",
+    "title": "央行决定下调存款准备金率0.5个百分点，释放流动性约1万亿元",
+    "url": "https://example.com/news/1_0",
+    "source": "新华财经",
+    "published_time": "2025-08-05 15:31:15",
+    "summary": "央行决定下调存款准备金率0.5个百分点，释放流动性约1万亿元...",
+    "category": "货币政策",
+    "keywords": [
+      "央行",
+      "降准",
+      "流动性"
+    ],
+    "content_hash": "f4cce45d81f90f1fd731853d7d80ca7e",
+    "heat_score": 42.0
+  }
+]

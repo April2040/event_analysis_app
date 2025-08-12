@@ -35,6 +35,7 @@ def call_llm(user_input: str, system_prompt: str, model="deepseek-chat") -> str:
                 {"role": "user", "content": user_input}
             ],
             temperature=0.7,
+            timeout=30,  # 设置30秒超时，提高响应速度
             # 不设置max_tokens限制，确保AI能够生成完整的深度分析
             stream=False  # 确保非流式响应以获得完整内容
         )

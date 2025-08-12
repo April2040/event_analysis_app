@@ -88,7 +88,7 @@ class NewsWebCrawler:
         return False
     
     def get_news_from_rss_feeds(self) -> List[Dict]:
-        """从RSS Feed获取新闻"""
+        """从RSS Feed获取新闻（优化版本 - 快速重试机制）"""
         print("📰 开始从RSS Feed获取新闻...")
         all_news = []
         successful_sources = 0
@@ -96,9 +96,26 @@ class NewsWebCrawler:
         for source, config in RSS_FEEDS.items():
             try:
                 print(f"  正在访问RSS: {source}")
+                start_time = time.time()
                 
-                response = self.session.get(config["url"], timeout=15)
-                response.raise_for_status()
+                # 快速重试机制 - 最多尝试2次，每次超时5秒
+                response = None
+                for attempt in range(2):
+                    try:
+                        response = self.session.get(config["url"], timeout=5)
+                        response.raise_for_status()
+                        break
+                    except Exception as e:
+                        if attempt == 0:
+                            print(f"    ⚠️ 第1次尝试失败，快速重试... ({e})")
+                            continue
+                        else:
+                            raise e
+                
+                if not response:
+                    continue
+                
+                fetch_time = time.time() - start_time
                 
                 # 确保正确的中文编码
                 if response.encoding.lower() in ['iso-8859-1', 'ascii']:
@@ -113,11 +130,11 @@ class NewsWebCrawler:
                     news_items = self._parse_html_feed(response.text, source)
                 
                 if news_items:
-                    print(f"  ✅ {source} - 获取到 {len(news_items)} 条新闻")
+                    print(f"  ✅ {source} - 获取到 {len(news_items)} 条新闻 (耗时: {fetch_time:.2f}s)")
                     all_news.extend(news_items)
                     successful_sources += 1
                 else:
-                    print(f"  ⚠️ {source} - 未获取到有效新闻")
+                    print(f"  ⚠️ {source} - 未获取到有效新闻 (耗时: {fetch_time:.2f}s)")
                     
             except Exception as e:
                 print(f"  ❌ {source} - 访问失败: {e}")
