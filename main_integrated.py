@@ -6,6 +6,7 @@ import os
 import json
 import sys
 from datetime import datetime
+from pathlib import Path
 
 # 添加项目根目录到Python路径
 project_root = os.path.dirname(os.path.abspath(__file__))
@@ -88,39 +89,53 @@ async def form_post(request: Request, user_input: str = Form(...), fast_mode: st
         
         print(f"💾 分析结果已保存到: {temp_filepath}")
         
-        # ✨ 新增：自动生成高级HTML可视化版本
+        # ✨ 新增：自动生成标准化HTML报告（基于认可的standalone版本）
         advanced_html_filepath = None
         try:
-            from utils_v2 import generate_advanced_html_auto
-            advanced_html_filepath = generate_advanced_html_auto(analysis_result, temp_filepath)
-            if advanced_html_filepath:
-                print(f"🎨 高级HTML可视化报告已生成: {advanced_html_filepath}")
+            from standardized_renderer import StandardizedRenderer
+            renderer = StandardizedRenderer()
+            advanced_html_filepath = renderer.render_to_html(temp_filepath)
+            if advanced_html_filepath and Path(advanced_html_filepath).exists():
+                print(f"🎨 标准化HTML报告已生成: {advanced_html_filepath}")
+            else:
+                print("⚠️ 标准化HTML生成失败")
         except Exception as e:
-            print(f"⚠️ 自动生成高级HTML失败: {e}")
+            print(f"⚠️ 标准化HTML生成失败: {e}")
         
         html_filename = None
         step2_time = 0
         
         # 根据用户选择决定是否生成HTML页面（不影响分析质量）
         if not fast_mode:  # 完整模式：包含专业HTML报告
-            print("🎨 第二步：开始生成专业HTML页面...")
+            print("🎨 第二步：开始生成标准化HTML页面...")
             step2_start = time.time()
-            html_content = generate_html_page(analysis_result)
-            step2_time = time.time() - step2_start
             
-            if "❌" in html_content:
-                return templates.TemplateResponse("index.html", {"request": request, "result": html_content})
-            
-            print(f"✅ HTML页面生成完成！耗时: {step2_time:.2f}秒, 长度: {len(html_content)} 字符")
-            
-            # 保存HTML页面到文件
-            html_filename = f"analysis_report_{timestamp}.html"
-            html_filepath = os.path.join("temp", html_filename)
-            
-            with open(html_filepath, "w", encoding="utf-8") as f:
-                f.write(html_content)
-            
-            print(f"🌐 HTML页面已保存到: {html_filepath}")
+            # 使用标准化渲染器生成HTML（基于认可的standalone版本）
+            try:
+                from standardized_renderer import StandardizedRenderer
+                renderer = StandardizedRenderer()
+                # 直接使用已保存的TXT文件路径
+                html_filepath = renderer.render_to_html(temp_filepath)
+                step2_time = time.time() - step2_start
+                
+                if html_filepath and Path(html_filepath).exists():
+                    # 读取生成的HTML内容用于返回
+                    with open(html_filepath, "r", encoding="utf-8") as f:
+                        html_content = f.read()
+                    
+                    print(f"✅ 标准化HTML页面生成完成！耗时: {step2_time:.2f}秒")
+                    print(f"🌐 HTML页面已保存到: {html_filepath}")
+                    
+                    # 设置html_filename用于后续处理
+                    html_filename = Path(html_filepath).name
+                else:
+                    print("❌ 标准化HTML生成失败，使用文本内容")
+                    html_content = f"<pre>{analysis_result}</pre>"
+                    step2_time = time.time() - step2_start
+            except Exception as e:
+                print(f"❌ 标准化HTML生成失败: {e}，使用文本内容")
+                html_content = f"<pre>{analysis_result}</pre>"
+                step2_time = time.time() - step2_start
         else:
             print("⚡ 快速模式：跳过HTML页面生成，节省时间（分析质量不变）")
         

@@ -242,10 +242,10 @@ def parse_analysis_content(content: str) -> dict:
 def generate_section_cards(sections: dict) -> str:
     """生成分析部分的卡片"""
     card_configs = [
-        ('event', '🟥 事件分析', 'event', 'fas fa-exclamation-triangle'),
-        ('situation', '🟧 局面评估', 'situation', 'fas fa-chart-area'),
-        ('structure', '🟩 结构分析', 'structure', 'fas fa-sitemap'),
-        ('investment', '💹 投资映射', 'investment', 'fas fa-coins')
+        ('event', '🟥 当前事件', 'event', 'fas fa-exclamation-triangle'),
+        ('situation', '🟧 博弈局面', 'situation', 'fas fa-chart-area'),
+        ('structure', '🟩 底层结构', 'structure', 'fas fa-sitemap'),
+        ('investment', '💹 投资机会', 'investment', 'fas fa-coins')
     ]
     
     cards_html = ""
