@@ -1,432 +1,619 @@
 #!/usr/bin/env python3
 """
 高级HTML生成器 - 创建专业可视化分析报告
-方案2: 本地模板生成，避免AI超时问题
+优化版本: 四模块分析 + 新闻简介 + 展开功能 + 完善的标题层级识别
 """
 
 import os
 import sys
 import re
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict
 
 class AdvancedHTMLGenerator:
     """高级HTML报告生成器"""
     
     def __init__(self):
-        self.template_style = """
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+        pass
+        
+    def extract_news_summary(self, content: str) -> str:
+        """从分析内容中智能提取新闻简介"""
+        try:
+            surface_pattern = r'【🟥[^】]*表层事件[^】]*】(.*?)(?=【|$)'
+            surface_match = re.search(surface_pattern, content, re.DOTALL)
             
-            body {
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                min-height: 100vh;
-                padding: 20px;
-                color: #333;
-            }
-            
-            .container {
-                max-width: 1400px;
-                margin: 0 auto;
-            }
-            
-            .header {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(15px);
-                border-radius: 25px;
-                padding: 40px;
-                text-align: center;
-                margin-bottom: 30px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-                animation: slideInDown 0.8s ease-out;
-            }
-            
-            .header h1 {
-                font-size: 3rem;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                margin-bottom: 15px;
-                font-weight: 800;
-            }
-            
-            .header .subtitle {
-                color: #666;
-                font-size: 1.2rem;
-                margin-bottom: 10px;
-            }
-            
-            .header .meta {
-                color: #999;
-                font-size: 0.95rem;
-            }
-            
-            .analysis-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-                gap: 25px;
-                margin-bottom: 30px;
-            }
-            
-            .analysis-card {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(15px);
-                border-radius: 20px;
-                padding: 30px;
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-                transition: all 0.4s ease;
-                position: relative;
-                overflow: hidden;
-                animation: fadeInUp 0.8s ease-out;
-            }
-            
-            .analysis-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            }
-            
-            .analysis-card::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: var(--accent-color);
-            }
-            
-            .card-header {
-                display: flex;
-                align-items: center;
-                margin-bottom: 20px;
-                padding-bottom: 15px;
-                border-bottom: 2px solid #f0f0f0;
-            }
-            
-            .card-icon {
-                font-size: 2.5rem;
-                margin-right: 15px;
-                color: var(--accent-color);
-            }
-            
-            .card-title {
-                font-size: 1.5rem;
-                font-weight: 700;
-                color: #333;
-            }
-            
-            .card-content {
-                line-height: 1.8;
-                color: #555;
-                white-space: pre-wrap;
-                font-size: 0.95rem;
-            }
-            
-            .event-card { --accent-color: #e74c3c; }
-            .situation-card { --accent-color: #f39c12; }
-            .structure-card { --accent-color: #27ae60; }
-            .investment-card { --accent-color: #3498db; }
-            
-            .full-content {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(15px);
-                border-radius: 20px;
-                padding: 40px;
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-                animation: fadeInUp 0.8s ease-out 0.2s both;
-            }
-            
-            .full-content h2 {
-                font-size: 2rem;
-                margin-bottom: 25px;
-                color: #333;
-                display: flex;
-                align-items: center;
-            }
-            
-            .full-content h2 i {
-                margin-right: 15px;
-                color: #3498db;
-            }
-            
-            .content-text {
-                line-height: 1.8;
-                white-space: pre-wrap;
-                color: #444;
-                font-size: 1rem;
-            }
-            
-            .stats-bar {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(10px);
-                border-radius: 15px;
-                padding: 20px;
-                margin-bottom: 25px;
-                display: flex;
-                justify-content: space-around;
-                text-align: center;
-                animation: slideInUp 0.8s ease-out 0.4s both;
-            }
-            
-            .stat-item {
-                flex: 1;
-            }
-            
-            .stat-value {
-                font-size: 1.8rem;
-                font-weight: 800;
-                color: #3498db;
-                display: block;
-            }
-            
-            .stat-label {
-                color: #666;
-                font-size: 0.9rem;
-                margin-top: 5px;
-            }
-            
-            @keyframes slideInDown {
-                from {
-                    opacity: 0;
-                    transform: translateY(-50px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            
-            @keyframes slideInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            
-            @media (max-width: 768px) {
-                .analysis-grid {
-                    grid-template-columns: 1fr;
-                }
+            if surface_match:
+                surface_content = surface_match.group(1).strip()
                 
-                .header h1 {
-                    font-size: 2rem;
-                }
+                time_pattern = r'[*-]*\s*时间线[*：:](.*?)(?=[*-]*\s*(?:核心行动者|行动者|直接结果|争议焦点)|$)'
+                actors_pattern = r'[*-]*\s*(?:核心行动者|行动者)[*：:](.*?)(?=[*-]*\s*(?:直接结果|争议焦点|时间线)|$)'
+                results_pattern = r'[*-]*\s*直接结果[*：:](.*?)(?=[*-]*\s*(?:争议焦点|核心行动者|时间线)|$)'
                 
-                .container {
-                    padding: 10px;
-                }
-            }
+                time_match = re.search(time_pattern, surface_content, re.DOTALL | re.IGNORECASE)
+                actors_match = re.search(actors_pattern, surface_content, re.DOTALL | re.IGNORECASE)
+                results_match = re.search(results_pattern, surface_content, re.DOTALL | re.IGNORECASE)
+                
+                summary_parts = []
+                
+                if time_match:
+                    time_info = time_match.group(1).strip()
+                    time_clean = re.sub(r'[*\s]+', ' ', time_info)
+                    time_clean = re.sub(r'^\s*[：:]\s*', '', time_clean)
+                    summary_parts.append(time_clean.split('。')[0].split('，')[0])
+                
+                if actors_match:
+                    actors_info = actors_match.group(1).strip()
+                    actors_clean = re.sub(r'[*\s]+', ' ', actors_info)
+                    actors_clean = re.sub(r'^\s*[：:]\s*', '', actors_clean)
+                    if '（' in actors_clean:
+                        actors_clean = actors_clean.split('（')[0]
+                    summary_parts.append(actors_clean.split('。')[0].split('、')[0])
+                
+                if results_match:
+                    results_info = results_match.group(1).strip()
+                    results_clean = re.sub(r'[*\s]+', ' ', results_info)
+                    results_clean = re.sub(r'^\s*[：:]\s*', '', results_clean)
+                    summary_parts.append(results_clean.split('。')[0])
+                
+                if summary_parts:
+                    news_summary = '，'.join(summary_parts[:3])
+                    if not news_summary.endswith('。'):
+                        news_summary += '。'
+                    return news_summary
             
-            .highlight {
-                background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
-                padding: 2px 6px;
-                border-radius: 4px;
-                font-weight: 600;
-            }
+            return "财经事件深度分析：市场动态与投资机会解读。"
             
-            .number {
-                color: #e74c3c;
-                font-weight: 700;
-            }
-            
-            .percentage {
-                color: #27ae60;
-                font-weight: 700;
-            }
-        </style>
-        """
-    
+        except Exception as e:
+            print(f"新闻简介提取失败: {e}")
+            return "财经事件深度分析：市场动态与投资机会解读。"
+
     def parse_analysis_sections(self, content: str) -> Dict[str, str]:
         """解析分析内容的各个部分"""
-        sections = {
-            'event': '',
-            'situation': '',
-            'structure': '',
-            'investment': '',
-            'full': content
-        }
+        sections = {}
         
-        # 匹配不同部分的正则表达式
         patterns = {
-            'event': r'【🟥.*?事件.*?】(.*?)(?=【🟧|【🟩|【💹|$)',
-            'situation': r'【🟧.*?局面.*?】(.*?)(?=【🟥|【🟩|【💹|$)',
-            'structure': r'【🟩.*?结构.*?】(.*?)(?=【🟥|【🟧|【💹|$)',
-            'investment': r'【💹.*?投资映射.*?】(.*?)(?=【🟥|【🟧|【🟩|$)'
+            '表层事件': [
+                r'【🟥[^】]*表层事件[^】]*】(.*?)(?=【|$)',
+                r'🟥[^】]*表层事件[^】]*(.*?)(?=🟧|🟩|💹|$)',
+            ],
+            '博弈局面': [
+                r'【🟧[^】]*博弈局面[^】]*】(.*?)(?=【|$)',
+                r'🟧[^】]*博弈局面[^】]*(.*?)(?=🟥|🟩|💹|$)',
+            ],
+            '底层逻辑': [
+                r'【🟩[^】]*(?:底层逻辑|结构分析)[^】]*】(.*?)(?=【|$)',
+                r'🟩[^】]*(?:底层逻辑|结构分析)[^】]*(.*?)(?=🟥|🟧|💹|$)',
+            ],
+            '投资映射': [
+                r'【💹[^】]*投资映射[^】]*】(.*?)(?=【|$)',
+                r'💹[^】]*投资映射[^】]*(.*?)(?=🟥|🟧|🟩|$)',
+            ]
         }
         
-        for key, pattern in patterns.items():
-            match = re.search(pattern, content, re.DOTALL | re.IGNORECASE)
-            if match:
-                sections[key] = match.group(1).strip()
+        for section_name, section_patterns in patterns.items():
+            for pattern in section_patterns:
+                match = re.search(pattern, content, re.DOTALL | re.IGNORECASE)
+                if match:
+                    sections[section_name] = match.group(1).strip()
+                    break
         
         return sections
-    
+
     def enhance_content(self, content: str) -> str:
-        """增强内容显示效果"""
-        # 高亮数字
-        content = re.sub(r'\b(\d+(?:\.\d+)?%)\b', r'<span class="percentage">\1</span>', content)
-        content = re.sub(r'\b(\d+(?:,\d+)*(?:\.\d+)?)\b', r'<span class="number">\1</span>', content)
+        """增强内容格式，处理列表、表格和格式化"""
+        if not content:
+            return ""
         
-        # 高亮重要术语
-        important_terms = ['涨停', '跌停', '利率', '通胀', 'GDP', 'CPI', 'PPI', 'PMI', '央行', '美联储']
-        for term in important_terms:
-            content = content.replace(term, f'<span class="highlight">{term}</span>')
+        # 处理顺序很重要：先处理标题，再处理列表
+        content = self._process_section_headers(content)
+        content = self._process_markdown(content)
+        content = self._process_lists(content)
+        content = self.render_tables(content)
         
         return content
-    
-    def calculate_stats(self, content: str) -> Dict[str, str]:
-        """计算内容统计信息"""
-        return {
-            'word_count': str(len(content)),
-            'sections': '4',
-            'analysis_depth': '专业级',
-            'confidence': '95%'
-        }
-    
-    def generate_advanced_html(self, txt_file_path: str) -> str:
-        """生成高级可视化HTML"""
+
+    def _process_markdown(self, text: str) -> str:
+        """处理Markdown格式转HTML"""
+        text = re.sub(r'\*\*([^*]+)\*\*', r'<strong>\1</strong>', text)
+        text = re.sub(r'__([^_]+)__', r'<strong>\1</strong>', text)
+        text = re.sub(r'\*([^*]+)\*', r'<em>\1</em>', text)
+        text = re.sub(r'_([^_]+)_', r'<em>\1</em>', text)
+        return text
+
+    def _process_section_headers(self, content: str) -> str:
+        """处理章节标题 - 专门优化博弈局面等复杂结构"""
+        
+        # 第一步：处理一级标题 - **标题**： 格式（列表项）
+        content = re.sub(
+            r'^- \*\*([^*]+)\*\*[：:]\s*$',
+            r'<div class="section-header level-1">\1</div>',
+            content,
+            flags=re.MULTILINE
+        )
+        
+        # 第二步：处理二级标题 - 带缩进的 **标题**： 格式
+        content = re.sub(
+            r'^  - \*\*([^*]+)\*\*[：:]\s*(.*)$',
+            r'<div class="section-header level-2">\1</div>\n\2',
+            content,
+            flags=re.MULTILINE
+        )
+        
+        # 第三步：处理数字编号标题
+        content = re.sub(
+            r'^(\d+)\.\s*(.+)$',
+            r'<div class="section-header level-1">\1. \2</div>',
+            content,
+            flags=re.MULTILINE
+        )
+        
+        # 第四步：处理其他粗体标题（兜底）
+        content = re.sub(
+            r'^\*\*([^*]+)\*\*[：:]\s*$',
+            r'<div class="section-header level-1">\1</div>',
+            content,
+            flags=re.MULTILINE
+        )
+        
+        return content
+
+    def _process_lists(self, content: str) -> str:
+        """处理列表结构 - 跳过已处理的标题"""
+        lines = content.split('\n')
+        processed_lines = []
+        
+        for line in lines:
+            original_line = line
+            stripped_line = line.strip()
+            
+            if not stripped_line:
+                continue
+            
+            # 跳过已经处理过的标题
+            if '<div class="section-header' in line:
+                processed_lines.append(original_line)
+                continue
+                
+            # 处理列表项
+            if re.match(r'^- ', stripped_line):
+                # 第一级列表项
+                text = re.sub(r'^- ', '', stripped_line)
+                processed_lines.append(f'<li class="list-item level-1">{text}</li>')
+            elif re.match(r'^  - ', line):  # 保持原始缩进检测
+                # 第二级列表项
+                text = re.sub(r'^  - ', '', line).strip()
+                processed_lines.append(f'<li class="list-item level-2">{text}</li>')
+            elif re.match(r'^\s{4,}- ', line):
+                # 第三级列表项
+                text = re.sub(r'^\s*- ', '', line).strip()
+                processed_lines.append(f'<li class="list-item level-3">{text}</li>')
+            elif re.match(r'^\d+\.\s+', stripped_line):
+                # 数字列表
+                text = re.sub(r'^\d+\.\s+', '', stripped_line)
+                processed_lines.append(f'<li class="list-item level-1">{text}</li>')
+            else:
+                # 普通文本行
+                processed_lines.append(stripped_line)
+        
+        return '\n'.join(processed_lines)
+
+    def render_tables(self, content: str) -> str:
+        """渲染表格内容"""
+        table_pattern = r'\|[^|]*\|[^|]*\|[^|]*\|?[^\n]*\n(?:\|[^|]*\|[^|]*\|[^|]*\|?[^\n]*\n?)+'
+        
+        def process_table(match):
+            table_text = match.group(0)
+            lines = [line.strip() for line in table_text.split('\n') if line.strip()]
+            
+            if len(lines) < 2:
+                return table_text
+            
+            rows = []
+            for line in lines:
+                if '|' in line:
+                    cells = [cell.strip() for cell in line.split('|') if cell.strip()]
+                    if cells:
+                        rows.append(cells)
+            
+            if not rows:
+                return table_text
+            
+            html = '<div class="table-container">\\n<table class="analysis-table">\\n'
+            
+            if rows:
+                html += '<thead>\\n<tr>\\n'
+                for cell in rows[0]:
+                    html += f'<th>{cell}</th>\\n'
+                html += '</tr>\\n</thead>\\n'
+            
+            if len(rows) > 1:
+                html += '<tbody>\\n'
+                for row in rows[1:]:
+                    html += '<tr>\\n'
+                    for cell in row:
+                        if '⬆️' in cell or '积极' in cell:
+                            cell = f'<span style="color: #27ae60;">{cell}</span>'
+                        elif '⬇️' in cell or '消极' in cell:
+                            cell = f'<span style="color: #e74c3c;">{cell}</span>'
+                        elif '➡️' in cell or '分化' in cell:
+                            cell = f'<span style="color: #f39c12;">{cell}</span>'
+                        
+                        html += f'<td>{cell}</td>\\n'
+                    html += '</tr>\\n'
+                html += '</tbody>\\n'
+            
+            html += '</table>\\n</div>'
+            return html
+        
+        content = re.sub(table_pattern, process_table, content, flags=re.MULTILINE)
+        return content
+
+    def _truncate_content(self, content: str, max_length: int = 300) -> str:
+        """智能截断内容，避免破坏HTML标签"""
+        if len(content) <= max_length:
+            return content
+        
+        truncated = content[:max_length]
+        
+        last_open = truncated.rfind('<')
+        last_close = truncated.rfind('>')
+        
+        if last_open > last_close:
+            truncated = content[:last_open]
+        
+        if truncated != content:
+            truncated += '...'
+        
+        return truncated
+
+    def generate_advanced_html(self, file_path: str) -> str:
+        """生成高级HTML报告"""
         try:
-            with open(txt_file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
+            news_summary = self.extract_news_summary(content)
             sections = self.parse_analysis_sections(content)
-            stats = self.calculate_stats(content)
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            filename = os.path.basename(txt_file_path)
-            
-            # 增强内容显示
-            enhanced_content = self.enhance_content(content)
             
             html_content = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>财经事件分析报告 - 高级可视化版本</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    {self.template_style}
+    <title>金融事件深度分析报告</title>
+    <style>
+        :root {{
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }}
+        
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        body {{
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }}
+        
+        .container {{
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }}
+        
+        .header {{
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }}
+        
+        .header h1 {{
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }}
+        
+        .header p {{
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }}
+        
+        .news-summary {{
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }}
+        
+        .news-summary h2 {{
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }}
+        
+        .news-summary p {{
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }}
+        
+        .analysis-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }}
+        
+        .analysis-card {{
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }}
+        
+        .analysis-card:hover {{
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }}
+        
+        .card-title {{
+            background: linear-gradient(135deg, var(--accent-color), #2980b9);
+            color: white;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }}
+        
+        .card-content {{
+            padding: 0;
+        }}
+        
+        .content-preview {{
+            padding: 20px;
+            max-height: 200px;
+            overflow: hidden;
+            position: relative;
+        }}
+        
+        .content-full {{
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }}
+        
+        .expand-controls {{
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }}
+        
+        .expand-btn {{
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        
+        .expand-btn:hover {{
+            background: #2980b9;
+            transform: translateY(-2px);
+        }}
+        
+        .expand-icon {{
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }}
+        
+        .list-item {{
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.7;
+        }}
+        
+        .list-item:last-child {{
+            border-bottom: none;
+        }}
+        
+        .list-item.level-1 {{
+            margin-left: 0;
+            font-size: 1rem;
+        }}
+        
+        .list-item.level-2 {{
+            margin: 6px 0 6px 20px;
+            font-size: 0.95rem;
+        }}
+        
+        .list-item.level-3 {{
+            margin: 6px 0 6px 40px;
+            font-size: 0.9rem;
+        }}
+        
+        .section-header {{
+            margin: 20px 0 15px 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }}
+        
+        .section-header.level-1 {{
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.05));
+            border-left: 4px solid var(--accent-color);
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }}
+        
+        .section-header.level-2 {{
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.12), rgba(46, 204, 113, 0.03));
+            border-left: 3px solid var(--success-color);
+            font-size: 1rem;
+            color: var(--success-color);
+            margin: 15px 0 10px 0;
+            padding: 8px 15px;
+        }}
+        
+        .table-container {{
+            margin: 20px 0;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }}
+        
+        .analysis-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }}
+        
+        .analysis-table th {{
+            background: linear-gradient(135deg, var(--accent-color, #3498db), rgba(var(--accent-color-rgb, 52, 152, 219), 0.8));
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+            border: none;
+            font-size: 0.95rem;
+        }}
+        
+        .analysis-table td {{
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            background: rgba(255, 255, 255, 0.8);
+        }}
+        
+        .analysis-table tr:hover td {{
+            background: rgba(52, 152, 219, 0.05);
+        }}
+        
+        .analysis-table tr:last-child td {{
+            border-bottom: none;
+        }}
+        
+        @media (max-width: 768px) {{
+            .analysis-grid {{
+                grid-template-columns: 1fr;
+            }}
+            
+            .header h1 {{
+                font-size: 2rem;
+            }}
+            
+            .container {{
+                padding: 15px;
+            }}
+        }}
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- 标题区域 -->
         <div class="header">
-            <h1><i class="fas fa-chart-line"></i> 财经事件分析报告</h1>
-            <div class="subtitle">专业投资分析 · 深度市场洞察 · 高级可视化版本</div>
-            <div class="meta">
-                📁 源文件: {filename} | 🕐 生成时间: {timestamp} | 🎨 高级模板
-            </div>
+            <h1>📊 金融事件深度分析报告</h1>
+            <p>基于AI智能分析的专业财经事件解读</p>
         </div>
         
-        <!-- 统计信息栏 -->
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span class="stat-value">{stats['word_count']}</span>
-                <div class="stat-label">分析字数</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value">{stats['sections']}</span>
-                <div class="stat-label">分析维度</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value">{stats['analysis_depth']}</span>
-                <div class="stat-label">分析深度</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value">{stats['confidence']}</span>
-                <div class="stat-label">置信度</div>
-            </div>
+        <div class="news-summary">
+            <h2>📰 事件概要</h2>
+            <p>{news_summary}</p>
         </div>
         
-        <!-- 分析维度网格 -->
-        <div class="analysis-grid">
-            <div class="analysis-card event-card">
-                <div class="card-header">
-                    <i class="fas fa-exclamation-triangle card-icon"></i>
-                    <div class="card-title">🟥 事件分析</div>
-                </div>
-                <div class="card-content">{self.enhance_content(sections['event'][:500] + '...' if len(sections['event']) > 500 else sections['event'] or '正在深度分析事件核心要素...')}</div>
-            </div>
+        <div class="analysis-grid">"""
             
-            <div class="analysis-card situation-card">
-                <div class="card-header">
-                    <i class="fas fa-chart-area card-icon"></i>
-                    <div class="card-title">🟧 局面评估</div>
-                </div>
-                <div class="card-content">{self.enhance_content(sections['situation'][:500] + '...' if len(sections['situation']) > 500 else sections['situation'] or '正在评估当前市场局面...')}</div>
-            </div>
+            card_configs = [
+                {'key': '表层事件', 'title': '🟥 事件分析', 'icon': '🟥'},
+                {'key': '博弈局面', 'title': '🟧 局面评估', 'icon': '🟧'},
+                {'key': '底层逻辑', 'title': '🟩 结构分析', 'icon': '🟩'},
+                {'key': '投资映射', 'title': '💹 投资映射', 'icon': '💹'}
+            ]
             
-            <div class="analysis-card structure-card">
-                <div class="card-header">
-                    <i class="fas fa-sitemap card-icon"></i>
-                    <div class="card-title">🟩 结构分析</div>
+            for config in card_configs:
+                section_content = sections.get(config['key'], f"{config['title']}部分暂无内容")
+                enhanced_content = self.enhance_content(section_content)
+                
+                # 投资映射模块需要更长的预览长度，因为有表格和详细内容
+                if config['key'] == '投资映射':
+                    preview_content = self._truncate_content(enhanced_content, 1650)
+                else:
+                    preview_content = self._truncate_content(enhanced_content, 300)
+                
+                html_content += f"""
+            <div class="analysis-card">
+                <div class="card-title">{config['title']}</div>
+                <div class="card-content">
+                    <div class="content-preview">
+                        {preview_content}
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        {enhanced_content}
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="card-content">{self.enhance_content(sections['structure'][:500] + '...' if len(sections['structure']) > 500 else sections['structure'] or '正在分析深层结构要素...')}</div>
-            </div>
+            </div>"""
             
-            <div class="analysis-card investment-card">
-                <div class="card-header">
-                    <i class="fas fa-coins card-icon"></i>
-                    <div class="card-title">💹 投资映射</div>
-                </div>
-                <div class="card-content">{self.enhance_content(sections['investment'][:500] + '...' if len(sections['investment']) > 500 else sections['investment'] or '正在构建投资策略映射...')}</div>
-            </div>
-        </div>
-        
-        <!-- 完整分析内容 -->
-        <div class="full-content">
-            <h2><i class="fas fa-file-alt"></i>完整分析报告</h2>
-            <div class="content-text">{enhanced_content}</div>
+            html_content += """
         </div>
     </div>
-    
+
     <script>
-        // 滚动动画观察器
-        const observerOptions = {{
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        }};
-        
-        const observer = new IntersectionObserver((entries) => {{
-            entries.forEach(entry => {{
-                if (entry.isIntersecting) {{
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }}
-            }});
-        }}, observerOptions);
-        
-        // 观察所有卡片
-        document.querySelectorAll('.analysis-card, .full-content').forEach(card => {{
-            observer.observe(card);
-        }});
-        
-        // 点击卡片展开/收缩
-        document.querySelectorAll('.analysis-card').forEach(card => {{
-            card.addEventListener('click', function() {{
-                this.classList.toggle('expanded');
-            }});
-        }});
+        function toggleExpand(button) {
+            const card = button.closest('.analysis-card');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('.expand-icon');
+            const text = button.querySelector('span:last-child');
+            
+            if (full.style.display === 'none') {
+                preview.style.display = 'none';
+                full.style.display = 'block';
+                icon.textContent = '▲';
+                text.textContent = '收起内容';
+                
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                preview.style.display = 'block';
+                full.style.display = 'none';
+                icon.textContent = '▼';
+                text.textContent = '展开更多内容';
+            }
+        }
     </script>
 </body>
 </html>"""
@@ -434,53 +621,38 @@ class AdvancedHTMLGenerator:
             return html_content
             
         except Exception as e:
-            print(f"❌ 高级HTML生成失败: {e}")
+            print(f"生成HTML失败: {e}")
             return None
 
 def main():
     """主函数"""
-    generator = AdvancedHTMLGenerator()
+    if len(sys.argv) != 2:
+        print("使用方法: python generate_advanced_html.py <分析文件路径>")
+        sys.exit(1)
     
-    if len(sys.argv) > 1:
-        # 转换指定文件
-        txt_file = sys.argv[1]
-        if os.path.exists(txt_file):
-            html_content = generator.generate_advanced_html(txt_file)
-            if html_content:
-                html_file = txt_file.replace('.txt', '_advanced.html')
-                with open(html_file, 'w', encoding='utf-8') as f:
-                    f.write(html_content)
-                print(f"✅ 高级HTML生成成功: {html_file}")
-            else:
-                print("❌ 生成失败")
-        else:
-            print(f"❌ 文件不存在: {txt_file}")
+    file_path = sys.argv[1]
+    if not os.path.exists(file_path):
+        print(f"文件不存在: {file_path}")
+        sys.exit(1)
+    
+    generator = AdvancedHTMLGenerator()
+    html_content = generator.generate_advanced_html(file_path)
+    
+    if html_content:
+        base_name = os.path.splitext(file_path)[0]
+        output_file = f"{base_name}_advanced.html"
+        
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+        
+        print(f"✅ 高级HTML报告已生成: {output_file}")
+        
+        # 添加简单的验证
+        level1_headers = len(re.findall(r'<div class="section-header level-1">', html_content))
+        level2_headers = len(re.findall(r'<div class="section-header level-2">', html_content))
+        print(f"📊 结构验证: 一级标题{level1_headers}个, 二级标题{level2_headers}个")
     else:
-        # 转换最新文件
-        temp_dir = "temp"
-        if not os.path.exists(temp_dir):
-            print("❌ temp目录不存在")
-            return
-        
-        txt_files = [f for f in os.listdir(temp_dir) if f.startswith('temp_analysis_') and f.endswith('.txt')]
-        if not txt_files:
-            print("❌ 没有找到分析文件")
-            return
-        
-        txt_files.sort(reverse=True)
-        latest_file = os.path.join(temp_dir, txt_files[0])
-        
-        print(f"🔍 找到最新分析文件: {latest_file}")
-        html_content = generator.generate_advanced_html(latest_file)
-        
-        if html_content:
-            html_file = latest_file.replace('.txt', '_advanced.html')
-            with open(html_file, 'w', encoding='utf-8') as f:
-                f.write(html_content)
-            print(f"✅ 高级HTML生成成功: {html_file}")
-            print(f"🌐 可在浏览器打开: file://{os.path.abspath(html_file)}")
-        else:
-            print("❌ 生成失败")
+        print("❌ HTML生成失败")
 
 if __name__ == "__main__":
     main()

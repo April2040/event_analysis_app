@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融事件深度分析报告</title>
+    <style>
+        
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .news-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .news-summary h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .news-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .module {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .module:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .module-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .module-content {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+        
+        .list-item {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .list-item.level-1 {
+            font-weight: 600;
+            color: var(--primary-color);
+            border-left: 3px solid var(--accent-color);
+            padding-left: 12px;
+        }
+        
+        .list-item.level-2 {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-left: 20px;
+            border-left: 2px solid var(--success-color);
+            padding-left: 10px;
+        }
+        
+        .list-item strong {
+            color: var(--primary-color);
+        }
+        
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 20px 0 15px 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .section-header.level-1 {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-left-color: #2c3e50;
+            border-width: 4px;
+        }
+        
+        .section-header.level-2 {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-left-color: #1e8449;
+            border-width: 3px;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .preview-note {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.95rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+        
+        .analysis-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .analysis-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .content-preview {
+            display: block;
+        }
+        
+        .content-full {
+            display: none;
+        }
+        
+        .expand-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .expand-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .expand-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 金融事件深度分析报告</h1>
+            <p class="subtitle">基于AI智能分析的专业财经事件解读</p>
+            <p class="subtitle">生成时间：2025年08月19日 18:09:35</p>
+        </div>
+        
+        <div class="news-summary">
+            <h2>📰 新闻简介</h2>
+            <p>2025年8月强化对稀土出口的管控，重点打击外国企业囤积行为，相关部门强化对稀土出口的管控。</p>
+        </div>
+        
+        <div class="main-grid">
+            <div class="module">
+                <div class="module-title">
+                    <span>🟥</span>
+                    <span>事件分析</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <li class="list-item level-1"><strong>时间线</strong>：2025年8月，中国宣布强化对稀土出口的管控，重点打击外国企业囤积行为。</li>
+                        <li class="list-item level-1"><strong>核心行动者</strong>：中国政府（工信部、商务部）、国际稀土进口企业（如美国、欧盟、日本的高科技与军工企业）。</li>
+                        <li class="list-item level-1"><strong>直接结果</strong>：稀土出口短期收紧，国际市场价格波动加剧，下游产业供应链焦虑上升。</li>
+                        <li class="list-item level-1"><strong>争议焦点</strong>：西方媒体指责中国“武器化资源”，中方则强调“合理供应链安全管控”。</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟧</span>
+                    <span>局面评估</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <div class="section-header level-1">战略态势</div>
+                        <li class="list-item level-1"><strong>力量对比</strong>：中国占全球稀土精炼产能80%，但美欧正加速构建替代供应链（如澳大利亚Lynas、美国MP Materials）。</li>
+                        <li class="list-item level-1"><strong>市场情绪</strong>：恐慌性采购风险抬头，尤其是钕铁硼（电机用）、镝（军工）等关键品种。</li>
+                        <li class="list-item level-1"><strong>政策信号</strong>：中国可能进一步整合国内稀土企业（如中国稀土集团），强化定价权；欧美或推出“关键矿产联盟”反制。</li>
+                        <div class="section-header level-1">中期影响路径</div>
+                        <li class="list-item level-1"><strong>供给</strong>：短期囤货成本上升，中期倒逼非中国产能扩张（但3-5年难替代）。</li>
+                        <li class="list-item level-1"><strong>技术路线</strong>：加速稀土回收技术（如Urban Mining）、低稀土含量电机研发（如特斯拉下一代驱动系统）。</li>
+                        <li class="list-item level-1"><strong>监管</strong>：WTO规则博弈升级，或催生“稀土出口配额”新国际框架。</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟩</span>
+                    <span>结构分析</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <div class="section-header level-1">结构性张力</div>
+                        <p>1. **产业链分布**：中国垄断中游精炼（分离提纯技术+环境成本优势），但上游采矿（澳大利亚、缅甸）和下游应用（欧美日）依赖地缘合作。</p>
+                        <p>2. **债务周期**：欧美绿色转型（风电、电动车）依赖稀土，若供应链断裂可能推高通胀，加剧债务负担。</p>
+                        <p>3. **地缘秩序**：稀土成为“技术冷战”核心筹码，类似1973年石油危机中的OPEC角色。</p>
+                        <div class="section-header level-1">慢变量驱动</div>
+                        <p>- 未来5-10年，稀土或分化出“中国阵营”（低价+长协）和“非中阵营”（高价+低稳定性）双轨制市场。</p>
+                        <p>- 非洲（如布隆迪、坦桑尼亚）稀土开发将成中美角力新战场。</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>💹</span>
+                    <span>投资映射</span>
+                </div>
+                <div class="module-content">
+                    <div class="content-preview">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>投资标的</th>
+                                        <th>影响方向</th>
+                                        <th>时间周期</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>中国稀土企业</strong></td>
+                                        <td style="color: #27ae60;">⬆️ 积极正面</td>
+                                        <td>短期&中期</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>投资标的</th>
+                                        <th>影响方向</th>
+                                        <th>时间周期</th>
+                                        <th>风险收益评级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>中国稀土企业</strong><br>北方稀土、盛和资源、广晟有色</td>
+                                        <td style="color: #27ae60;">⬆️ 积极正面</td>
+                                        <td>短期&中期</td>
+                                        <td>★★★★☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>海外稀土矿企</strong><br>Lynas、MP Materials、Rainbow Rare Earths</td>
+                                        <td style="color: #27ae60;">⬆️ 积极正面</td>
+                                        <td>中期&长期</td>
+                                        <td>★★★☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>稀土下游制造</strong><br>永磁材料、催化剂、荧光粉企业</td>
+                                        <td style="color: #f39c12;">➡️ 分化影响</td>
+                                        <td>短期&中期</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>新能源汽车</strong><br>依赖永磁电机的车企</td>
+                                        <td style="color: #e74c3c;">⬇️ 消极负面</td>
+                                        <td>短期</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>风电设备制造</strong><br>海上风电、直驱永磁技术</td>
+                                        <td style="color: #e74c3c;">⬇️ 消极负面</td>
+                                        <td>短期&中期</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="section-header level-1">投资策略建议</div>
+                        <li class="list-item level-1"><strong>核心持仓</strong>：优质中国稀土龙头企业，受益于价格上涨和政策支持。</li>
+                        <li class="list-item level-1"><strong>配置考虑</strong>：海外稀土替代项目，长期具备供应链多元化价值。</li>
+                        <li class="list-item level-1"><strong>风险控制</strong>：避免过度依赖稀土的下游制造企业，关注成本传导能力。</li>
+                        <li class="list-item level-1"><strong>时机选择</strong>：政策明确后的价格波动期是建仓良机，注意情绪面影响。</li>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 金融事件分析系统 | 基于标准化模板生成</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleExpand(button) {
+            const card = button.closest('.module');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('.expand-icon');
+            const text = button.querySelector('span:last-child');
+            
+            if (full.style.display === 'none') {
+                full.style.display = 'block';
+                preview.style.display = 'none';
+                icon.textContent = '▲';
+                text.textContent = '收起内容';
+                button.classList.add('expanded');
+            } else {
+                full.style.display = 'none';
+                preview.style.display = 'block';
+                icon.textContent = '▼';
+                text.textContent = '展开更多内容';
+                button.classList.remove('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

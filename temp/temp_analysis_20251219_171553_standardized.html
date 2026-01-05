@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财经新闻AI深度解读报告</title>
+    <style>
+        
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .timestamp {
+            color: #333;
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-top: 15px;
+        }
+        
+        .news-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .news-summary h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .news-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .module {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .module:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .module-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .module-content {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+        
+        .list-item {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .list-item.level-1 {
+            font-weight: 600;
+            color: var(--primary-color);
+            border-left: 3px solid var(--accent-color);
+            padding-left: 12px;
+        }
+        
+        .list-item.level-2 {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-left: 20px;
+            border-left: 2px solid var(--success-color);
+            padding-left: 10px;
+        }
+        
+        .list-item strong {
+            color: var(--primary-color);
+        }
+        
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 20px 0 15px 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .section-header.level-1 {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-left-color: #2c3e50;
+            border-width: 4px;
+        }
+        
+        .section-header.level-2 {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-left-color: #1e8449;
+            border-width: 3px;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .preview-note {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.95rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+        
+        .analysis-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .analysis-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .content-preview {
+            display: block;
+        }
+        
+        .content-full {
+            display: none;
+        }
+        
+        .expand-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .expand-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .expand-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 财经新闻AI深度解读报告</h1>
+            <p class="subtitle">穿透"热闹"看"门道"，洞察事件底层逻辑，把握投资机会</p>
+            <p class="timestamp">生成时间：2025年12月19日 17:15:53</p>
+        </div>
+        
+        <div class="news-summary">
+            <h2>📰 新闻简介</h2>
+            <p>2025年12月18日，英国央行宣布将基准利率下调25个基点至3.75%。</p>
+        </div>
+        
+        <div class="main-grid">
+            <div class="module">
+                <div class="module-title">
+                    <span>🟥</span>
+                    <span>事件梳理</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <p>- 2025年12月18日，英国央行宣布将基准利率下调25个基点至3.75%。</p>
+                        <p>- 核心行动者是英国央行货币政策委员会，其行动的直接原因是应对经济增长停滞（预计Q4 GDP零增长）和通胀降温。</p>
+                        <p>- 直接结果是政策利率进入宽松通道，但央行同时释放了“降息前景将愈发难测”的前瞻指引，与市场可能预期的更明确宽松路径形成反差。</p>
+                        <p>- 媒体争议焦点在于：此次降息是“预防性”还是“滞后性”？“难测”的指引是反映了经济前景的高度不确定性，还是央行在抑制市场过度乐观情绪？</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟧</span>
+                    <span>局面评估</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <li class="list-item level-1"><strong>战略态势</strong>：英国央行正走在“数据依赖”的钢丝上。一方面需应对疲软的经济增长，另一方面需警惕通胀可能复燃的风险，避免重蹈过早、过快放松政策的覆辙。主要利益相关方包括：英国政府（希望宽松以支持经济）、金融市场（渴望明确降息路径）、家庭与企业（受高利率压制）。</li>
+                        <li class="list-item level-1"><strong>力量对比</strong>：央行试图重新掌握对市场预期的控制权（通过“难测”的指引），对抗市场押注的激进降息周期。市场情绪可能从“庆祝降息”转向“担忧不确定性”。</li>
+                        <div class="section-header level-1">中期影响路径</div>
+                        <li class="list-item level-1"><strong>需求</strong>：降息旨在提振信贷需求，刺激投资与消费，但效果受制于高企的存量债务和全球需求疲软。</li>
+                        <li class="list-item level-1"><strong>资金流</strong>：英镑利差优势收窄，可能引发部分国际资本流出英国资产，转向更高收益或增长更快的市场。</li>
+                        <li class="list-item level-1"><strong>汇率与通胀</strong>：英镑贬值压力可能部分抵消进口通缩，使通胀下行路径变得复杂，这正是央行“难测”的核心考量之一。</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟩</span>
+                    <span>底层逻辑</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <li class="list-item level-1"><strong>长期结构张力</strong>：此事件是英国“低增长-高债务-高通胀”结构性困境的缩影。脱欧后的贸易摩擦、劳动力市场结构性紧张、生产率增长长期低迷是根本原因。</li>
+                        <li class="list-item level-1"><strong>债务与信用周期</strong>：英国政府与家庭部门债务高企，央行在债务周期末端（高利率压制偿债能力）被迫转向宽松，但信用传导机制可能因银行审慎和经济前景黯淡而失效。</li>
+                        <li class="list-item level-1"><strong>地缘秩序演变</strong>：英国作为开放型中型经济体，其货币政策独立性日益受到全球资本流动（尤其是美元周期）和主要贸易伙伴（欧盟、美国）经济政策的制约。</li>
+                        <li class="list-item level-1"><strong>慢变量驱动力</strong>：未来3-10年，人口老龄化、与欧盟关系的持续调整、以及为应对气候变化和地缘冲突而增加的政府支出，将持续对英国的生产率、潜在增长率和通胀中枢构成上行压力，迫使央行在“滞胀”环境中进行更艰难的权衡。</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>💹</span>
+                    <span>投资映射</span>
+                </div>
+                <div class="module-content">
+                    <div class="content-preview">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>投资标的</th>
+                                        <th>影响方向</th>
+                                        <th>时间周期</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>消费相关股权</strong></td>
+                                        <td style="color: #27ae60;">⬆️ 积极正面</td>
+                                        <td>短期&中期</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>资产类别</th>
+                                        <th>逻辑链条</th>
+                                        <th>具体标的/指数</th>
+                                        <th>风险收益评级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>**股权**</strong></td>
+                                        <td>**受益**：对利率敏感的高估值成长股、房地产板块、金融股（净息差压力缓解预期）。**受损**：以国际收入为主的大型股（受英镑贬值提振，但受全球增长担忧压制）、对英国内需极度敏感的零售股。</td>
+                                        <td>受益：FTSE 250（更侧重英国国内）、房地产信托(UK REITs)。受损：FTSE 100（跨国公司占比高，逻辑复杂）。</td>
+                                        <td>★★★★☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>**固收**</strong></td>
+                                        <td>**受益**：短期英国国债（对政策利率最敏感）。**受损/谨慎**：长期英国国债（因“难测”的指引和潜在通胀韧性，期限溢价可能上升）。</td>
+                                        <td>2年期英债、通胀挂钩债券（应对不确定性）。</td>
+                                        <td>★★★☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>**大宗商品**</strong></td>
+                                        <td>**中性偏多**：英镑计价商品（如伦敦金属交易所的铜、铝）因英镑贬值而对国际买家显得更便宜。黄金作为对冲货币贬值和政策不确定性的工具可能受益。</td>
+                                        <td>黄金(GBP计价)、工业金属。</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>**外汇**</strong></td>
+                                        <td>**受损**：英镑（GBP）。利差优势收窄，且经济前景黯淡。**受益**：美元（USD）、欧元（EUR）（相对利差和增长预期可能占优）。</td>
+                                        <td>做空GBP/USD， 关注GBP/EUR。</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>**衍生品**</strong></td>
+                                        <td>可考虑买入英镑波动率（如GBP/USD期权），因央行指引“难测”意味着未来数据发布和会议决议可能引发更大汇率波动。卖出英国国债期货（尤其是长端）以对冲“利率路径不确定性”风险。</td>
+                                        <td>英镑波动率指数相关产品、英国国债期货。</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 金融事件分析系统 | 基于标准化模板生成</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleExpand(button) {
+            const card = button.closest('.module');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('.expand-icon');
+            const text = button.querySelector('span:last-child');
+            
+            if (full.style.display === 'none') {
+                full.style.display = 'block';
+                preview.style.display = 'none';
+                icon.textContent = '▲';
+                text.textContent = '收起内容';
+                button.classList.add('expanded');
+            } else {
+                full.style.display = 'none';
+                preview.style.display = 'block';
+                icon.textContent = '▼';
+                text.textContent = '展开更多内容';
+                button.classList.remove('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

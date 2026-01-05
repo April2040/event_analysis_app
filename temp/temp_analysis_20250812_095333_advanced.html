@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融事件深度分析报告</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .news-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .news-summary h2 {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .news-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 25px;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-title {
+            background: var(--gradient-bg);
+            color: white;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .card-content {
+            padding: 25px;
+            min-height: 200px;
+        }
+        
+        .content-preview, .content-full {
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        
+        .expand-controls {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .expand-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .expand-btn:hover {
+            background: #2980b9;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #ffeaa7, #fdcb6e);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .number {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .percentage {
+            background: linear-gradient(120deg, #00b894, #00cec9);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .list-item {
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .list-item.level-1 {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--accent-color);
+            font-weight: 600;
+            margin: 12px 0;
+        }
+        
+        .list-item.level-2 {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 3px solid var(--success-color);
+            margin-left: 20px;
+            margin: 8px 0 8px 20px;
+        }
+        
+        .list-item.level-3 {
+            background: rgba(241, 196, 15, 0.1);
+            border-left: 2px solid var(--warning-color);
+            margin-left: 40px;
+            margin: 6px 0 6px 40px;
+            font-size: 0.9rem;
+        }
+        
+        /* 表格样式 */
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .analysis-table th {
+            background: linear-gradient(135deg, var(--accent-color, #3498db), rgba(var(--accent-color-rgb, 52, 152, 219), 0.8));
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+            border: none;
+            font-size: 0.95rem;
+        }
+        
+        .analysis-table th:first-child {
+            border-top-left-radius: 12px;
+        }
+        
+        .analysis-table th:last-child {
+            border-top-right-radius: 12px;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+            background: rgba(255, 255, 255, 0.9);
+            transition: background-color 0.3s ease;
+        }
+        
+        .analysis-table tr:hover td {
+            background: rgba(var(--accent-color-rgb, 52, 152, 219), 0.05);
+        }
+        
+        .analysis-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .analysis-table tr:last-child td:first-child {
+            border-bottom-left-radius: 12px;
+        }
+        
+        .analysis-table tr:last-child td:last-child {
+            border-bottom-right-radius: 12px;
+        }
+        
+        /* 表格第一列样式（资产类别） */
+        .analysis-table td:first-child {
+            font-weight: 600;
+            color: var(--accent-color, #3498db);
+            background: rgba(var(--accent-color-rgb, 52, 152, 219), 0.02);
+        }
+        
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .card-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1 class="main-title">📊 金融事件深度分析报告</h1>
+                <div class="timestamp">生成时间: 2025年08月19日 12:23</div>
+            </div>
+            
+            <div class="news-summary">
+                <h2>📰 事件概要</h2>
+                <p>2025年8月11日，美国总统特朗普宣布将对华贸易休战延长90天。 特朗普政府、中国（北京方面）。</p>
+            </div>
+            
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <div class="card-title">🟥 事件分析</div>
+                    <div class="card-content">
+                        <div class="content-preview">
+                            <li class="list-item level-1"><strong>时间线</strong>：2025年8月11日，美国总统特朗普宣布将对华贸易休战延长90天。  </li>
+<li class="list-item level-1"><strong>核心行动者</strong>：特朗普政府、中国（北京方面）。  </li>
+<li class="list-item level-1"><strong>直接结果</strong>：中美贸易紧张局势短期缓和，避免了关税升级或新制裁。...
+                        </div>
+                        <div class="content-full" style="display: none;">
+                            <li class="list-item level-1"><strong>时间线</strong>：2025年8月11日，美国总统特朗普宣布将对华贸易休战延长90天。  </li>
+<li class="list-item level-1"><strong>核心行动者</strong>：特朗普政府、中国（北京方面）。  </li>
+<li class="list-item level-1"><strong>直接结果</strong>：中美贸易紧张局势短期缓和，避免了关税升级或新制裁。  </li>
+<li class="list-item level-1"><strong>争议焦点</strong>：市场对“休战”的可持续性存疑（是否仅是选举年策略？），中国是否会在休战期内做出实质性让步。</li>
+                        </div>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="card-title">🟧 局面评估</div>
+                    <div class="card-content">
+                        <div class="content-preview">
+                            <li class="list-item level-1"><strong>战略态势</strong>：  </li>
+<li class="list-item level-2"><strong>利益相关方</strong>：美国（选举政治驱动）、中国（经济复苏压力）、全球供应链企业。  </li>
+<li class="list-item level-2"><strong>力量对比</strong>：美国仍握有关税杠杆，但中国在新能源、制造业等领域具备反制能力。...
+                        </div>
+                        <div class="content-full" style="display: none;">
+                            <li class="list-item level-1"><strong>战略态势</strong>：  </li>
+<li class="list-item level-2"><strong>利益相关方</strong>：美国（选举政治驱动）、中国（经济复苏压力）、全球供应链企业。  </li>
+<li class="list-item level-2"><strong>力量对比</strong>：美国仍握有关税杠杆，但中国在新能源、制造业等领域具备反制能力。  </li>
+<li class="list-item level-2"><strong>市场情绪</strong>：短期风险偏好回升，但长期结构性矛盾未解。  </li>
+<li class="list-item level-2"><strong>政策信号</strong>：美方释放“柔性施压”信号，中方可能以技术管制放松或农产品采购回应。  </li>
+
+<li class="list-item level-1"><strong>中期影响路径</strong>：  </li>
+<li class="list-item level-2"><strong>供应链</strong>：企业暂缓“去中国化”投资，但区域多元化趋势不变。  </li>
+<li class="list-item level-2"><strong><span class="highlight">通胀</span></strong>：延缓美国部分消费品价格压力，但若休战结束可能触发新一轮输入性<span class="highlight">通胀</span>。  </li>
+<li class="list-item level-2"><strong>技术竞争</strong>：休战期内双方或加速本土技术替代（如芯片、AI）。</li>
+                        </div>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="card-title">🟩 结构分析</div>
+                    <div class="card-content">
+                        <div class="content-preview">
+                            <li class="list-item level-1"><strong>深层张力</strong>：  </li>
+<li class="list-item level-2 numbered">1. <strong>债务周期</strong>：美国高债务+中国地方债压力，迫使双方避免“双输”贸易战。  </li>
+<li class="list-item level-2 numbered">2. <strong>技术霸权</strong>：半导体、AI等领域的“脱钩”是长期趋势，休战难改技术竞赛本质。...
+                        </div>
+                        <div class="content-full" style="display: none;">
+                            <li class="list-item level-1"><strong>深层张力</strong>：  </li>
+<li class="list-item level-2 numbered">1. <strong>债务周期</strong>：美国高债务+中国地方债压力，迫使双方避免“双输”贸易战。  </li>
+<li class="list-item level-2 numbered">2. <strong>技术霸权</strong>：半导体、AI等领域的“脱钩”是长期趋势，休战难改技术竞赛本质。  </li>
+<li class="list-item level-2 numbered">3. <strong>地缘秩序</strong>：G2格局下，贸易工具成为地缘博弈筹码（如台海、中东议题联动）。  </li>
+
+<li class="list-item level-1"><strong>慢变量驱动</strong>：  </li>
+<li class="list-item level-2"><strong>产业链</strong>：东南亚/墨西哥“中国+1”投资继续，但节奏放缓。  </li>
+<li class="list-item level-2"><strong>货币体系</strong>：人民币国际化与美元霸权博弈持续，贸易休战降低短期汇率冲突风险。  </li>
+
+---
+                        </div>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <div class="card-title">💹 投资映射</div>
+                    <div class="card-content">
+                        <div class="content-preview">
+                            
+                        </div>
+                        <div class="content-full" style="display: none;">
+                            
+                        </div>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function toggleExpand(button) {
+                const card = button.closest('.analysis-card');
+                const preview = card.querySelector('.content-preview');
+                const full = card.querySelector('.content-full');
+                const icon = button.querySelector('i');
+                const text = button.querySelector('span');
+                
+                if (full.style.display === 'none') {
+                    preview.style.display = 'none';
+                    full.style.display = 'block';
+                    icon.className = 'fas fa-chevron-up';
+                    text.textContent = '收起内容';
+                    
+                    // 平滑滚动到卡片顶部
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    preview.style.display = 'block';
+                    full.style.display = 'none';
+                    icon.className = 'fas fa-chevron-down';
+                    text.textContent = '展开更多内容';
+                }
+            }
+        </script>
+    </body>
+    </html>

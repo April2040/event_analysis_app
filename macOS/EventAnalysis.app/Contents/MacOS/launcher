@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Resolve this script path even if launched via Finder
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# 直接指向项目根目录的绝对路径
+APP_ROOT="/Users/qiyi/coding/event_analysis_app"
+cd "$APP_ROOT"
+
+# Log file
+LOG_DIR="$APP_ROOT/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/app_launcher_$(date +%Y%m%d_%H%M%S).log"
+
+# Use Terminal to run start script so user can see logs
+# Prefer iTerm2 if installed, otherwise use macOS Terminal
+
+run_in_terminal() {
+  local cmd="$1"
+  if command -v osascript >/dev/null 2>&1; then
+    # Try iTerm2 first
+    if [ -d "/Applications/iTerm.app" ] || [ -d "$HOME/Applications/iTerm.app" ]; then
+      osascript <<EOF
+      tell application "iTerm"
+        activate
+        create window with default profile
+        tell current session of current window
+          write text "cd $APP_ROOT && $cmd"
+        end tell
+      end tell
+EOF
+    else
+      # Fallback to Apple Terminal
+      osascript <<EOF
+      tell application "Terminal"
+        activate
+        do script "cd $APP_ROOT && $cmd"
+      end tell
+EOF
+    fi
+  else
+    # Last resort: run in background
+    nohup bash -lc "cd '$APP_ROOT' && $cmd" >> "$LOG_FILE" 2>&1 &
+  fi
+}
+
+# Wait for service to be ready
+wait_for_service() {
+  echo "等待服务启动..." >> "$LOG_FILE"
+  for i in {1..30}; do
+    if curl -s http://localhost:8002 >/dev/null 2>&1; then
+      echo "服务已启动，打开浏览器..." >> "$LOG_FILE"
+      open http://localhost:8002
+      return 0
+    fi
+    sleep 2
+  done
+  echo "服务启动超时，请手动访问 http://localhost:8002" >> "$LOG_FILE"
+  return 1
+}
+
+# Ensure executable permissions
+chmod +x "$APP_ROOT/start_optimized.sh" "$APP_ROOT/status.sh" "$APP_ROOT/stop_optimized.sh" "$APP_ROOT/restart.sh" 2>/dev/null || true
+
+# Start the optimized service
+run_in_terminal "./start_optimized.sh"
+
+# Wait in background for service to be ready, then open browser
+wait_for_service &
+
+exit 0

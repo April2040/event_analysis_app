@@ -1,0 +1,438 @@
+Here's a professional, modern HTML page for the Chinese event analysis with investment insights:
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>稀土政策事件分析 - 专业投资视角</title>
+    <style>
+        :root {
+            --primary: #e63946;
+            --secondary: #457b9d;
+            --dark: #1d3557;
+            --light: #f1faee;
+            --accent: #a8dadc;
+            --success: #2a9d8f;
+            --warning: #e9c46a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--dark), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card.red {
+            border-top-color: var(--primary);
+        }
+        
+        .card.orange {
+            border-top-color: var(--warning);
+        }
+        
+        .card.green {
+            border-top-color: var(--success);
+        }
+        
+        .card.blue {
+            border-top-color: var(--secondary);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .badge-red {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .badge-orange {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .badge-green {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .badge-blue {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+            margin: 1.5rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--accent);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: rgba(168, 218, 220, 0.1);
+        }
+        
+        .highlight {
+            background-color: rgba(233, 196, 106, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .scenario-table {
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+        
+        .scenario-table th {
+            background-color: var(--dark);
+            color: white;
+        }
+        
+        .scenario-table tr:nth-child(even) {
+            background-color: rgba(241, 250, 238, 0.5);
+        }
+        
+        .probability-cell {
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .probability-60 {
+            color: var(--success);
+        }
+        
+        .probability-25 {
+            color: var(--warning);
+        }
+        
+        .probability-15 {
+            color: var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>稀土政策事件深度分析</h1>
+            <p class="subtitle">中国稀土出口管制对全球产业链及投资市场的影响评估 | 2025年8月</p>
+        </header>
+        
+        <div class="card-container">
+            <div class="card red">
+                <h2 class="card-title"><span class="badge badge-red">事件</span>核心事件分析</h2>
+                <p><strong>时间线：</strong>2025年8月，中国宣布严控外国企业囤积稀土，具体政策细节待公布。</p>
+                <p><strong>核心行动者：</strong>中国政府（工信部、商务部）、外国稀土进口企业（如欧美、日韩的高科技/军工企业）。</p>
+                <p><strong>直接结果：</strong>外国企业稀土库存可能被限制或强制释放，中国对稀土供应链的控制力进一步强化。</p>
+                <p><strong>争议焦点：</strong>是否违反WTO规则？是否引发全球供应链"武器化"担忧？</p>
+            </div>
+            
+            <div class="card orange">
+                <h2 class="card-title"><span class="badge badge-orange">局面</span>战略态势评估</h2>
+                <p><strong>力量对比：</strong>中国占全球稀土开采量60%、冶炼分离90%，拥有定价权；欧美加速本土供应链建设但短期难替代。</p>
+                <p><strong>市场情绪：</strong>恐慌性抢购稀土（短期）→ 推动价格上涨；长期可能加速"去中国化"技术研发。</p>
+                <p><strong>政策信号：</strong>中国将稀土定位为"战略资源"，与芯片、新能源等产业政策联动。</p>
+                
+                <div class="divider"></div>
+                
+                <h3>中期影响路径：</h3>
+                <ol>
+                    <li><strong>供需：</strong>短期供给收缩推升价格，中长期刺激海外（如澳大利亚、美国）稀土产能扩张</li>
+                    <li><strong>资金流：</strong>稀土产业链（采矿、磁材、回收技术）获资本倾斜，但地缘风险溢价上升</li>
+                    <li><strong>技术路线：</strong>欧美加速开发稀土替代材料（如无稀土电机）、提高回收率技术</li>
+                    <li><strong>监管格局：</strong>全球稀土贸易或面临更严格审查，类似"碳关税"的"供应链安全税"可能兴起</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="card green">
+            <h2 class="card-title"><span class="badge badge-green">结构</span>深层张力分析</h2>
+            <div class="card-container" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h3>深层张力：</h3>
+                    <ol>
+                        <li><strong>产业链分布：</strong>中国稀土优势源于冶炼技术+环境成本容忍度，但低端产能过剩与高端专利不足并存</li>
+                        <li><strong>债务周期：</strong>欧美通过补贴政策（如美国《国防生产法》）强行推动本土产能，可能加剧财政赤字</li>
+                        <li><strong>地缘秩序：</strong>资源民族主义 vs. 供应链安全诉求，形成"技术-资源"的新冷战式割裂</li>
+                        <li><strong>生产率：</strong>稀土限制倒逼自动化/回收技术突破，但短期抬高制造业成本</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>慢变量驱动力：</h3>
+                    <p>未来3-10年，稀土可能成为"绿色通胀"（能源转型+地缘冲突）的核心标的，类似石油在20世纪的地位。</p>
+                    
+                    <div class="divider"></div>
+                    
+                    <h3>宏观信号解码：</h3>
+                    <p><strong>冲击变量：</strong></p>
+                    <ul>
+                        <li><strong>通胀预期：</strong>稀土涨价推高新能源车、风电、军工成本</li>
+                        <li><strong>风险偏好：</strong>资源主权风险溢价上升，新兴市场资产波动加大</li>
+                    </ul>
+                    <p><strong>周期提示：</strong>若政策持续，全球制造业或进入"滞胀"象限（成本升+增长降）</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card blue">
+            <h2 class="card-title"><span class="badge badge-blue">投资</span>资产映射分析</h2>
+            
+            <h3>受益/受损资产清单</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>资产类别</th>
+                        <th>逻辑链条</th>
+                        <th>具体标的/指数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>股权</strong></td>
+                        <td>中国稀土龙头受益于定价权</td>
+                        <td>北方稀土（600111.SH）</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>海外替代技术公司获政策倾斜</td>
+                        <td>MP Materials（MP.US）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>固收</strong></td>
+                        <td>稀土出口国主权债信用改善</td>
+                        <td>澳大利亚国债</td>
+                    </tr>
+                    <tr>
+                        <td><strong>大宗</strong></td>
+                        <td>稀土价格飙升</td>
+                        <td>镨钕氧化物（期货）</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>替代金属（如铝镍钴）需求上升</td>
+                        <td>LME镍</td>
+                    </tr>
+                    <tr>
+                        <td><strong>外汇</strong></td>
+                        <td>中国贸易顺差支撑人民币</td>
+                        <td>CNY</td>
+                    </tr>
+                    <tr>
+                        <td><strong>衍生品</strong></td>
+                        <td>稀土波动率交易机会</td>
+                        <td>稀土ETF期权</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="divider"></div>
+            
+            <h3>情景-概率-收益/风险表</h3>
+            <table class="scenario-table">
+                <thead>
+                    <tr>
+                        <th>情景</th>
+                        <th>概率</th>
+                        <th>核心资产影响</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>基础情景：</strong>中国渐进式控量保价</td>
+                        <td class="probability-cell probability-60">60%</td>
+                        <td>稀土价格+20%，中资磁材股跑赢大盘</td>
+                    </tr>
+                    <tr>
+                        <td><strong>悲观情景：</strong>欧美联合制裁反制</td>
+                        <td class="probability-cell probability-25">25%</td>
+                        <td>全球科技股暴跌，黄金/比特币避险需求↑</td>
+                    </tr>
+                    <tr>
+                        <td><strong>乐观情景：</strong>技术突破降低依赖</td>
+                        <td class="probability-cell probability-15">15%</td>
+                        <td>稀土价格回落，欧美绿色科技股领涨</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="divider"></div>
+            
+            <h3>组合与对冲思路</h3>
+            <p><strong>框架：</strong></p>
+            <ul>
+                <li><strong>"资源主权+技术替代"杠铃策略：</strong>超配中国稀土股+欧美回收技术股，用黄金对冲地缘风险</li>
+            </ul>
+            
+            <p><strong>对冲手段：</strong></p>
+            <ul>
+                <li>买入稀土看涨期权 + 做多USD/CNH波动率</li>
+            </ul>
+            
+            <p><strong>再平衡触发：</strong>监测中国稀土出口配额、美国《国防生产法》新补贴法案</p>
+            
+            <div class="divider"></div>
+            
+            <h3>执行与监控</h3>
+            <p><strong>关键指标：</strong></p>
+            <ul>
+                <li><strong>高频：</strong>中国稀土出口数据、LME库存</li>
+                <li><strong>低频：</strong>欧美稀土产能建设进度、专利申报量</li>
+            </ul>
+            
+            <p><strong>行为偏差：</strong>警惕"稀土永磁"叙事过度炒作，实际需求受经济周期压制</p>
+        </div>
+        
+        <footer>
+            <p>⚠️ <strong>免责声明：</strong>本分析模拟框架推演，不构成投资建议。决策需结合个人风险偏好与实时信息。</p>
+            <p>© 2025 战略投资分析团队 | 数据截止日期：2025年8月</p>
+        </footer>
+    </div>
+</body>
+</html>
+```
+
+This HTML page features:
+
+1. **Modern Professional Design**:
+   - Clean card-based layout with color-coded sections
+   - Responsive design that works on mobile and desktop
+   - Smooth hover animations and fade-in effects
+
+2. **Investment-Focused Structure**:
+   - Clear segmentation of event/situation/structure/investment analysis
+   - Color-coded badges for quick visual identification
+   - Interactive tables with hover effects
+
+3. **Key Data Highlighting**:
+   - Probability indicators with color coding
+   - Asset mapping tables with clear categorization
+   - Scenario analysis with visual probability indicators
+
+4. **Chinese Language Interface**:
+   - Fully localized content in Chinese
+   - Professional financial terminology
+
+5. **Visual Hierarchy**:
+   - Strategic use of dividers and spacing
+   - Consistent typography and color scheme
+   - Clear section headers
+
+The page is ready to use - just copy and save as an HTML file to open in any browser.

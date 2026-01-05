@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财经事件分析报告 - 高级可视化版本</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+                color: #333;
+            }
+            
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            
+            .header {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-radius: 25px;
+                padding: 40px;
+                text-align: center;
+                margin-bottom: 30px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+                animation: slideInDown 0.8s ease-out;
+            }
+            
+            .header h1 {
+                font-size: 3rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 15px;
+                font-weight: 800;
+            }
+            
+            .header .subtitle {
+                color: #666;
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            
+            .header .meta {
+                color: #999;
+                font-size: 0.95rem;
+            }
+            
+            .analysis-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+                gap: 25px;
+                margin-bottom: 30px;
+            }
+            
+            .analysis-card {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                transition: all 0.4s ease;
+                position: relative;
+                overflow: hidden;
+                animation: fadeInUp 0.8s ease-out;
+            }
+            
+            .analysis-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+            
+            .analysis-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: var(--accent-color);
+            }
+            
+            .card-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            
+            .card-icon {
+                font-size: 2.5rem;
+                margin-right: 15px;
+                color: var(--accent-color);
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #333;
+            }
+            
+            .card-content {
+                line-height: 1.8;
+                color: #555;
+                white-space: pre-wrap;
+                font-size: 0.95rem;
+            }
+            
+            .expand-controls {
+                margin-top: 20px;
+                text-align: center;
+                border-top: 1px solid #f0f0f0;
+                padding-top: 15px;
+            }
+            
+            .expand-btn {
+                background: linear-gradient(135deg, var(--accent-color), rgba(var(--accent-color-rgb), 0.8));
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin: 0 auto;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(var(--accent-color-rgb), 0.3);
+            }
+            
+            .expand-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(var(--accent-color-rgb), 0.4);
+            }
+            
+            .expand-btn i {
+                transition: transform 0.3s ease;
+            }
+            
+            .event-card { 
+                --accent-color: #e74c3c; 
+                --accent-color-rgb: 231, 76, 60;
+            }
+            .situation-card { 
+                --accent-color: #f39c12; 
+                --accent-color-rgb: 243, 156, 18;
+            }
+            .structure-card { 
+                --accent-color: #27ae60; 
+                --accent-color-rgb: 39, 174, 96;
+            }
+            .investment-card { 
+                --accent-color: #3498db; 
+                --accent-color-rgb: 52, 152, 219;
+            }
+            
+            .full-content {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-radius: 20px;
+                padding: 40px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                animation: fadeInUp 0.8s ease-out 0.2s both;
+            }
+            
+            .full-content h2 {
+                font-size: 2rem;
+                margin-bottom: 25px;
+                color: #333;
+                display: flex;
+                align-items: center;
+            }
+            
+            .full-content h2 i {
+                margin-right: 15px;
+                color: #3498db;
+            }
+            
+            .content-text {
+                line-height: 1.8;
+                white-space: pre-wrap;
+                color: #444;
+                font-size: 1rem;
+            }
+            
+            .news-summary-bar {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 25px;
+                margin-bottom: 25px;
+                animation: slideInUp 0.8s ease-out 0.4s both;
+                border-left: 4px solid #3498db;
+            }
+            
+            .summary-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #3498db;
+            }
+            
+            .summary-header i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+            
+            .summary-content {
+                color: #444;
+                font-size: 1rem;
+                line-height: 1.6;
+                text-align: justify;
+                background: rgba(52, 152, 219, 0.05);
+                padding: 15px;
+                border-radius: 10px;
+                border: 1px solid rgba(52, 152, 219, 0.1);
+            }
+            
+            @keyframes slideInDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .analysis-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .header h1 {
+                    font-size: 2rem;
+                }
+                
+                .container {
+                    padding: 10px;
+                }
+            }
+            
+            .highlight {
+                background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-weight: 600;
+            }
+            
+            .number {
+                color: #e74c3c;
+                font-weight: 700;
+            }
+            
+            .percentage {
+                color: #27ae60;
+                font-weight: 700;
+            }
+            
+            /* 新增：Markdown渲染样式 */
+            strong {
+                font-weight: 700;
+                color: #2c3e50;
+            }
+            
+            em {
+                font-style: italic;
+                color: #7f8c8d;
+            }
+            
+            code {
+                background: #f8f9fa;
+                border: 1px solid #e9ecef;
+                border-radius: 4px;
+                padding: 2px 6px;
+                font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                font-size: 0.9em;
+                color: #e74c3c;
+            }
+            
+            .list-item {
+                margin: 8px 0;
+                padding-left: 15px;
+                position: relative;
+                list-style: none;
+                line-height: 1.6;
+            }
+            
+            .list-item.level-1 {
+                font-size: 1rem;
+                font-weight: 600;
+                margin: 12px 0;
+                padding-left: 20px;
+            }
+            
+            .list-item.level-1::before {
+                content: "●";
+                color: var(--accent-color, #3498db);
+                font-weight: bold;
+                position: absolute;
+                left: 0;
+                font-size: 1.2em;
+            }
+            
+            .list-item.level-2 {
+                font-size: 0.95rem;
+                margin: 8px 0 8px 25px;
+                padding-left: 18px;
+                color: #555;
+            }
+            
+            .list-item.level-2::before {
+                content: "▶";
+                color: var(--accent-color, #3498db);
+                position: absolute;
+                left: 0;
+                font-size: 0.8em;
+                opacity: 0.8;
+            }
+            
+            .list-item.level-3 {
+                font-size: 0.9rem;
+                margin: 6px 0 6px 45px;
+                padding-left: 16px;
+                color: #666;
+            }
+            
+            .list-item.level-3::before {
+                content: "•";
+                color: var(--accent-color, #3498db);
+                position: absolute;
+                left: 0;
+                font-size: 0.9em;
+                opacity: 0.6;
+            }
+            
+            .list-item.numbered {
+                counter-increment: none;
+            }
+            
+            .list-item.numbered::before {
+                content: "";
+            }
+            
+            .section-title {
+                color: #2c3e50;
+                margin: 15px 0 10px 0;
+                padding-bottom: 5px;
+                border-bottom: 2px solid var(--accent-color, #3498db);
+                font-weight: 600;
+            }
+            
+            /* 表格样式 */
+            .table-container {
+                margin: 20px 0;
+                overflow-x: auto;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                background: rgba(255, 255, 255, 0.95);
+            }
+            
+            .analysis-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+            
+            .analysis-table th {
+                background: linear-gradient(135deg, var(--accent-color, #3498db), rgba(var(--accent-color-rgb, 52, 152, 219), 0.8));
+                color: white;
+                font-weight: 600;
+                padding: 12px 15px;
+                text-align: left;
+                border: none;
+                font-size: 0.95rem;
+            }
+            
+            .analysis-table th:first-child {
+                border-top-left-radius: 12px;
+            }
+            
+            .analysis-table th:last-child {
+                border-top-right-radius: 12px;
+            }
+            
+            .analysis-table td {
+                padding: 12px 15px;
+                border-bottom: 1px solid #e9ecef;
+                vertical-align: top;
+                background: rgba(255, 255, 255, 0.9);
+                transition: background-color 0.3s ease;
+            }
+            
+            .analysis-table tr:hover td {
+                background: rgba(var(--accent-color-rgb, 52, 152, 219), 0.05);
+            }
+            
+            .analysis-table tr:last-child td {
+                border-bottom: none;
+            }
+            
+            .analysis-table tr:last-child td:first-child {
+                border-bottom-left-radius: 12px;
+            }
+            
+            .analysis-table tr:last-child td:last-child {
+                border-bottom-right-radius: 12px;
+            }
+            
+            /* 表格第一列样式（资产类别） */
+            .analysis-table td:first-child {
+                font-weight: 600;
+                color: var(--accent-color, #3498db);
+                background: rgba(var(--accent-color-rgb, 52, 152, 219), 0.02);
+            }
+        </style>
+        
+</head>
+<body>
+    <div class="container">
+        <!-- 标题区域 -->
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> 财经事件分析报告</h1>
+            <div class="subtitle">专业投资分析 · 深度市场洞察 · 高级可视化版本</div>
+            <div class="meta">
+                📁 源文件: temp_analysis_20250817_072527.txt | 🕐 生成时间: 2025-08-19 12:16:44 | 🎨 高级模板
+            </div>
+        </div>
+        
+        <!-- 新闻简介栏 -->
+        <div class="news-summary-bar">
+            <div class="summary-header">
+                <i class="fas fa-newspaper"></i>
+                <span>新闻简介</span>
+            </div>
+            <div class="summary-content">
+                - **核心行动者**：中国政府（工信部、商务部）、外国稀土进口企业（如欧美、日韩的高科技/军工企业）。 - **直接结果**：外国企业稀土库存可能被限制或强制释放，中国对稀土供应链的控制力进一步强化。 - **争议焦点**：是否违反WTO规则？是否引发全球供应链“武器化”担忧？
+            </div>
+        </div>
+        
+        <!-- 分析维度网格 -->
+        <div class="analysis-grid">
+            <div class="analysis-card event-card">
+                <div class="card-header">
+                    <i class="fas fa-exclamation-triangle card-icon"></i>
+                    <div class="card-title">🟥 事件分析</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-preview"><li class="list-item level-1"><strong>时间线</strong>：2025年8月，中国宣布严控外国企业囤积稀土，具体政策细节待公布。  </li>
+<li class="list-item level-1"><strong>核心行动者</strong>：中国政府（工信部、商务部）、外国稀土进口企业（如欧美、日韩的高科技/军工企业）。  </li>
+<li class="list-item level-1"><strong>直接结果</strong>：外国企业稀土库存可能被限制或强制释放，中国对稀土供应链的控制力进一步强化。  </li>
+<li class="list-item level-1"><strong>争议焦点</strong>：是否违反WTO规则？是否引发全球供应链“武器化”担忧？  </li>
+
+---</div>
+                    <div class="content-full" style="display: none;"><li class="list-item level-1"><strong>时间线</strong>：2025年8月，中国宣布严控外国企业囤积稀土，具体政策细节待公布。  </li>
+<li class="list-item level-1"><strong>核心行动者</strong>：中国政府（工信部、商务部）、外国稀土进口企业（如欧美、日韩的高科技/军工企业）。  </li>
+<li class="list-item level-1"><strong>直接结果</strong>：外国企业稀土库存可能被限制或强制释放，中国对稀土供应链的控制力进一步强化。  </li>
+<li class="list-item level-1"><strong>争议焦点</strong>：是否违反WTO规则？是否引发全球供应链“武器化”担忧？  </li>
+
+---</div>
+                </div>
+                
+            </div>
+            
+            <div class="analysis-card situation-card">
+                <div class="card-header">
+                    <i class="fas fa-chart-area card-icon"></i>
+                    <div class="card-title">🟧 局面评估</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-preview"><strong>战略态势</strong>：  
+<li class="list-item level-1"><strong>力量对比</strong>：中国占全球稀土开采量60%、冶炼分离90%，拥有定价权；欧美加速本土供应链建设但短期难替代。  </li>
+<li class="list-item level-1"><strong>市场情绪</strong>：恐慌性抢购稀土（短期）→ 推动价格上涨；长期可能加速“去中国化”技术研发。  </li>
+<li class="list-item level-1"><strong>政策信号</strong>：中国将稀土定位为“战略资源”，与芯片、新能源等产业政策联动。  </li>
+
+<strong>中期影响路径</strong>：  
+1. <strong>供需</strong>：短期供给收缩推升价格，中长期刺激海外（如澳大利亚、美国）稀土产能扩张。  
+2. <strong>资金流</strong>：稀土产业链（采矿、磁材、回收技术）获资本倾斜，但地缘风险溢价上升。  
+3. <strong>技术路线</strong>：欧美加速开发稀土替代材料（如无稀土电机）、提高回收率技术。  
+4. <strong>监管格局</strong>：全球稀土贸易或面临更严格审查，类似“碳关税”的“供应链安全税”可能兴起。  
+
+---</div>
+                    <div class="content-full" style="display: none;"><strong>战略态势</strong>：  
+<li class="list-item level-1"><strong>力量对比</strong>：中国占全球稀土开采量60%、冶炼分离90%，拥有定价权；欧美加速本土供应链建设但短期难替代。  </li>
+<li class="list-item level-1"><strong>市场情绪</strong>：恐慌性抢购稀土（短期）→ 推动价格上涨；长期可能加速“去中国化”技术研发。  </li>
+<li class="list-item level-1"><strong>政策信号</strong>：中国将稀土定位为“战略资源”，与芯片、新能源等产业政策联动。  </li>
+
+<strong>中期影响路径</strong>：  
+1. <strong>供需</strong>：短期供给收缩推升价格，中长期刺激海外（如澳大利亚、美国）稀土产能扩张。  
+2. <strong>资金流</strong>：稀土产业链（采矿、磁材、回收技术）获资本倾斜，但地缘风险溢价上升。  
+3. <strong>技术路线</strong>：欧美加速开发稀土替代材料（如无稀土电机）、提高回收率技术。  
+4. <strong>监管格局</strong>：全球稀土贸易或面临更严格审查，类似“碳关税”的“供应链安全税”可能兴起。  
+
+---</div>
+                </div>
+                
+            </div>
+            
+            <div class="analysis-card structure-card">
+                <div class="card-header">
+                    <i class="fas fa-sitemap card-icon"></i>
+                    <div class="card-title">🟩 结构分析</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-preview"><strong>深层张力</strong>：  
+1. <strong>产业链分布</strong>：中国稀土优势源于冶炼技术+环境成本容忍度，但低端产能过剩与高端专利不足并存。  
+2. <strong>债务周期</strong>：欧美通过补贴政策（如美国《国防生产法》）强行推动本土产能，可能加剧财政赤字。  
+3. <strong>地缘秩序</strong>：资源民族主义 vs. 供应链安全诉求，形成“技术-资源”的新冷战式割裂。  
+4. <strong>生产率</strong>：稀土限制倒逼自动化/回收技术突破，但短期抬高制造业成本。  
+
+<strong>慢变量驱动力</strong>：  
+- 未来3-10年，稀土可能成为“绿色<span class="highlight">通胀</span>”（能源转型+地缘冲突）的核心标的，类似石油在20世纪的地位。  
+
+---</div>
+                    <div class="content-full" style="display: none;"><strong>深层张力</strong>：  
+1. <strong>产业链分布</strong>：中国稀土优势源于冶炼技术+环境成本容忍度，但低端产能过剩与高端专利不足并存。  
+2. <strong>债务周期</strong>：欧美通过补贴政策（如美国《国防生产法》）强行推动本土产能，可能加剧财政赤字。  
+3. <strong>地缘秩序</strong>：资源民族主义 vs. 供应链安全诉求，形成“技术-资源”的新冷战式割裂。  
+4. <strong>生产率</strong>：稀土限制倒逼自动化/回收技术突破，但短期抬高制造业成本。  
+
+<strong>慢变量驱动力</strong>：  
+- 未来3-10年，稀土可能成为“绿色<span class="highlight">通胀</span>”（能源转型+地缘冲突）的核心标的，类似石油在20世纪的地位。  
+
+---</div>
+                </div>
+                
+            </div>
+            
+            <div class="analysis-card investment-card">
+                <div class="card-header">
+                    <i class="fas fa-coins card-icon"></i>
+                    <div class="card-title">💹 投资映射</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-preview">正在构建投资策略映射...</div>
+                    <div class="content-full" style="display: none;">正在构建投资策略映射...</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 展开/收起功能
+        function toggleExpand(button) {
+            const card = button.closest('.analysis-card');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('i');
+            const text = button.querySelector('span');
+            
+            if (preview.style.display !== 'none') {
+                // 展开
+                preview.style.display = 'none';
+                full.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+                text.textContent = '收起内容';
+            } else {
+                // 收起
+                preview.style.display = 'block';
+                full.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+                text.textContent = '展开更多内容';
+            }
+        }
+        
+        // 滚动动画观察器
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // 观察所有卡片
+        document.querySelectorAll('.analysis-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

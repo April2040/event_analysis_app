@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财经新闻AI深度解读报告</title>
+    <style>
+        
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .timestamp {
+            color: #333;
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-top: 15px;
+        }
+        
+        .news-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .news-summary h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .news-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .module {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .module:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .module-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .module-content {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+        
+        .list-item {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .list-item.level-1 {
+            font-weight: 600;
+            color: var(--primary-color);
+            border-left: 3px solid var(--accent-color);
+            padding-left: 12px;
+        }
+        
+        .list-item.level-2 {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-left: 20px;
+            border-left: 2px solid var(--success-color);
+            padding-left: 10px;
+        }
+        
+        .list-item strong {
+            color: var(--primary-color);
+        }
+        
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 20px 0 15px 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .section-header.level-1 {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-left-color: #2c3e50;
+            border-width: 4px;
+        }
+        
+        .section-header.level-2 {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-left-color: #1e8449;
+            border-width: 3px;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .preview-note {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.95rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+        
+        .analysis-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .analysis-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .content-preview {
+            display: block;
+        }
+        
+        .content-full {
+            display: none;
+        }
+        
+        .expand-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .expand-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .expand-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 财经新闻AI深度解读报告</h1>
+            <p class="subtitle">穿透"热闹"看"门道"，洞察事件底层逻辑，把握投资机会</p>
+            <p class="timestamp">生成时间：2025年09月26日 09:47:05</p>
+        </div>
+        
+        <div class="news-summary">
+            <h2>📰 新闻简介</h2>
+            <p>中国于2025年9月23日正式宣布放弃WTO发展中国家特殊和差别待遇（S&DT）</p>
+        </div>
+        
+        <div class="main-grid">
+            <div class="module">
+                <div class="module-title">
+                    <span>🟥</span>
+                    <span>事件梳理</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <p>- 中国于2025年9月23日正式宣布放弃WTO发展中国家特殊和差别待遇（S&DT）</p>
+                        <p>- 此举直接回应了美欧等发达经济体长期对"大型新兴经济体享受特殊待遇"的批评</p>
+                        <p>- 核心行动者包括中国商务部、WTO主要成员国及新兴市场代表</p>
+                        <p>- 直接结果为WTO改革清除了关键谈判障碍，但可能引发国内产业适应压力</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟧</span>
+                    <span>局面评估</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <li class="list-item level-1"><strong>战略态势</strong>：中国通过主动让步换取国际规则制定话语权，体现"以退为进"的外交策略</li>
+                        <li class="list-item level-1"><strong>力量对比</strong>：美中欧三方博弈出现新平衡点，新兴市场阵营面临重新分化（印度、巴西等国的S&DT压力增大）</li>
+                        <div class="section-header level-1">中期影响路径</div>
+                        <p>- 供给侧：中国制造业将加速向高附加值转型，倒逼技术升级</p>
+                        <p>- 资金流：外资对华投资门槛提高，但高质量FDI可能增加</p>
+                        <p>- 监管格局：国内补贴政策、环保标准等需更快与国际接轨</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟩</span>
+                    <span>底层逻辑</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <li class="list-item level-1"><strong>产业链重构</strong>：标志着全球价值链从"成本套利"向"规则协同"演进的关键转折点</li>
+                        <li class="list-item level-1"><strong>债务周期</strong>：放弃保护期将考验中国企业在更高竞争强度下的债务承受能力</li>
+                        <li class="list-item level-1"><strong>地缘秩序</strong>：中国通过承担更大国际责任，重塑全球经济治理中的合法性基础</li>
+                        <li class="list-item level-1"><strong>慢变量驱动</strong>：未来5-10年新兴经济体梯队分化加速，全球贸易规则呈现"分层化"特征</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>💹</span>
+                    <span>投资映射</span>
+                </div>
+                <div class="module-content">
+                    <div class="content-preview">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>投资标的</th>
+                                        <th>影响方向</th>
+                                        <th>时间周期</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>消费相关股权</strong></td>
+                                        <td style="color: #27ae60;">⬆️ 积极正面</td>
+                                        <td>短期&中期</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>资产类别</th>
+                                        <th>逻辑链条</th>
+                                        <th>具体标的/指数</th>
+                                        <th>风险收益评级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>股权</strong></td>
+                                        <td>**受益**：中国高端制造、数字贸易服务商；**受损**：依赖补贴的传统出口企业</td>
+                                        <td>科创板50、MSCI中国指数成分股分化</td>
+                                        <td>★★★★☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>固收</strong></td>
+                                        <td>中国主权债信用利差收窄，但部分行业信用风险上升</td>
+                                        <td>政策性金融债 vs 低评级产业债</td>
+                                        <td>★★★☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>大宗商品</strong></td>
+                                        <td>绿色金属（锂钴镍）需求结构性受益，传统大宗价格波动加剧</td>
+                                        <td>铜/铝比值套利机会</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>外汇</strong></td>
+                                        <td>人民币汇率双向波动加大，贸易加权指数中枢上移</td>
+                                        <td>CNY一篮子货币期权策略</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>衍生品</strong></td>
+                                        <td>跨市场波动率套利（发达市场vs新兴市场VIX差值收窄）</td>
+                                        <td>EEM/SPY波动率曲面</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 金融事件分析系统 | 基于标准化模板生成</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleExpand(button) {
+            const card = button.closest('.module');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('.expand-icon');
+            const text = button.querySelector('span:last-child');
+            
+            if (full.style.display === 'none') {
+                full.style.display = 'block';
+                preview.style.display = 'none';
+                icon.textContent = '▲';
+                text.textContent = '收起内容';
+                button.classList.add('expanded');
+            } else {
+                full.style.display = 'none';
+                preview.style.display = 'block';
+                icon.textContent = '▼';
+                text.textContent = '展开更多内容';
+                button.classList.remove('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

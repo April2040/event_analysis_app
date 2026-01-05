@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金融事件深度分析报告</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .news-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .news-summary h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .news-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-title {
+            background: linear-gradient(135deg, var(--accent-color), #2980b9);
+            color: white;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .card-content {
+            padding: 0;
+        }
+        
+        .content-preview {
+            padding: 20px;
+            max-height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .content-full {
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .expand-controls {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .expand-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .expand-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .expand-icon {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .list-item {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            line-height: 1.7;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item.level-1 {
+            margin-left: 0;
+            font-size: 1rem;
+        }
+        
+        .list-item.level-2 {
+            margin: 6px 0 6px 20px;
+            font-size: 0.95rem;
+        }
+        
+        .list-item.level-3 {
+            margin: 6px 0 6px 40px;
+            font-size: 0.9rem;
+        }
+        
+        .section-header {
+            margin: 20px 0 15px 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .section-header.level-1 {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.05));
+            border-left: 4px solid var(--accent-color);
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .analysis-table th {
+            background: linear-gradient(135deg, var(--accent-color, #3498db), rgba(var(--accent-color-rgb, 52, 152, 219), 0.8));
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+            border: none;
+            font-size: 0.95rem;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        .analysis-table tr:hover td {
+            background: rgba(52, 152, 219, 0.05);
+        }
+        
+        .analysis-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 金融事件深度分析报告</h1>
+            <p>基于AI智能分析的专业财经事件解读</p>
+        </div>
+        
+        <div class="news-summary">
+            <h2>📰 事件概要</h2>
+            <p>2025年8月，古普塔，若收购成功，利伯蒂钢铁可能避免破产，但需与债权人达成债务重组协议；若失败，可能触发清算。</p>
+        </div>
+        
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <div class="card-title">🟥 事件分析</div>
+                <div class="card-content">
+                    <div class="content-preview">
+                        <li class="list-item level-1"><strong>时间线</strong>：2025年8月，印度钢铁巨头桑吉夫·古普塔（Sanjeev Gupta）试图通过贝莱德融资收购其英国利伯蒂钢铁（Liberty Steel）剩余业务，以避免破产清算。</li>
+<li class="list-item level-1"><strong>核心行动者</strong>：古普塔（买方）、贝莱德（潜在融资方）、瑞银等债权人（债务方）。</li>
+<li class="list-item level-1"><strong>直接结果</strong>：若收购成功，利伯蒂钢铁可能避免破产，...
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <li class="list-item level-1"><strong>时间线</strong>：2025年8月，印度钢铁巨头桑吉夫·古普塔（Sanjeev Gupta）试图通过贝莱德融资收购其英国利伯蒂钢铁（Liberty Steel）剩余业务，以避免破产清算。</li>
+<li class="list-item level-1"><strong>核心行动者</strong>：古普塔（买方）、贝莱德（潜在融资方）、瑞银等债权人（债务方）。</li>
+<li class="list-item level-1"><strong>直接结果</strong>：若收购成功，利伯蒂钢铁可能避免破产，但需与债权人达成债务重组协议；若失败，可能触发清算。</li>
+<li class="list-item level-1"><strong>争议焦点</strong>：媒体关注古普塔的债务风险历史、贝莱德的融资动机（是否涉及ESG争议），以及债权人可能的抵制（如瑞银）。</li>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis-card">
+                <div class="card-title">🟧 局面评估</div>
+                <div class="card-content">
+                    <div class="content-preview">
+                        <li class="list-item level-1"><strong>战略态势</strong>：</li>
+<li class="list-item level-1"><strong>利益相关方</strong>：古普塔（保资产控制权）、贝莱德（寻求高收益/ESG标签）、债权人（优先回收债务）。</li>
+<li class="list-item level-1"><strong>力量对比</strong>：债权人（如瑞银）可能要求更高偿债比例；贝莱德的介入或削弱债权人议价能力。</li>
+<li class="list-item level-1"><strong>市场情绪...
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <li class="list-item level-1"><strong>战略态势</strong>：</li>
+<li class="list-item level-1"><strong>利益相关方</strong>：古普塔（保资产控制权）、贝莱德（寻求高收益/ESG标签）、债权人（优先回收债务）。</li>
+<li class="list-item level-1"><strong>力量对比</strong>：债权人（如瑞银）可能要求更高偿债比例；贝莱德的介入或削弱债权人议价能力。</li>
+<li class="list-item level-1"><strong>市场情绪</strong>：对欧洲钢铁行业整合的悲观情绪（高能源成本、需求疲软）与古普塔“救市”叙事的博弈。</li>
+<li class="list-item level-1"><strong>中期影响路径</strong>：</li>
+<li class="list-item level-1"><strong>资金流</strong>：若贝莱德注资，可能吸引其他私募资本进入困境资产领域。</li>
+<li class="list-item level-1"><strong>监管格局</strong>：英国政府或默许交易以避免就业冲击，但欧盟可能审查垄断风险。</li>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis-card">
+                <div class="card-title">🟩 结构分析</div>
+                <div class="card-content">
+                    <div class="content-preview">
+                        <li class="list-item level-1"><strong>结构性张力</strong>：</li>
+<li class="list-item level-1"><strong>债务周期</strong>：全球高利率环境下，高杠杆企业（如利伯蒂钢铁）面临再融资困境，暴露出“僵尸企业”问题。</li>
+<li class="list-item level-1"><strong>产业链分布</strong>：欧洲钢铁业受能源转型成本拖累，亚洲（如印度）巨头试图低价收购产能。</li>
+<li class="list-item level-1"><strong>地缘秩序...
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <li class="list-item level-1"><strong>结构性张力</strong>：</li>
+<li class="list-item level-1"><strong>债务周期</strong>：全球高利率环境下，高杠杆企业（如利伯蒂钢铁）面临再融资困境，暴露出“僵尸企业”问题。</li>
+<li class="list-item level-1"><strong>产业链分布</strong>：欧洲钢铁业受能源转型成本拖累，亚洲（如印度）巨头试图低价收购产能。</li>
+<li class="list-item level-1"><strong>地缘秩序</strong>：英国脱欧后工业政策乏力，依赖外资“救场”，反映其制造业竞争力衰退。</li>
+<li class="list-item level-1"><strong>慢变量驱动</strong>：未来5-10年，全球钢铁行业或加速整合，新兴市场资本收购发达国家落后产能成为趋势。</li>
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="analysis-card">
+                <div class="card-title">💹 投资映射</div>
+                <div class="card-content">
+                    <div class="content-preview">
+                        <li class="list-item level-1"><strong>宏观信号解码</strong></li>
+<li class="list-item level-1"><strong>冲击变量</strong>：信用利差（高收益债风险溢价）、英镑汇率（外资流入信号）。</li>
+<li class="list-item level-1"><strong>周期提示</strong>：若交易成功，或预示“滞胀”阶段中困境资产交易活跃（资本追逐有限的高收益机会）。</li>
+<li class="list-item level-1"><strong>受益/受损资产清单</strong>...
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <li class="list-item level-1"><strong>宏观信号解码</strong></li>
+<li class="list-item level-1"><strong>冲击变量</strong>：信用利差（高收益债风险溢价）、英镑汇率（外资流入信号）。</li>
+<li class="list-item level-1"><strong>周期提示</strong>：若交易成功，或预示“滞胀”阶段中困境资产交易活跃（资本追逐有限的高收益机会）。</li>
+<li class="list-item level-1"><strong>受益/受损资产清单</strong></li>
+<div class="table-container">\n<table class="analysis-table">\n<thead>\n<tr>\n<th>资产类别</th>\n<th>逻辑链条</th>\n<th>具体标的/指数</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>------------</td>\n<td>-----------------------------------</td>\n<td>------------------------------</td>\n</tr>\n<tr>\n<td><strong>股权</strong></td>\n<td>并购成功利好欧洲钢铁股（整合预期）</td>\n<td>安赛乐米塔尔（MT.AS）</td>\n</tr>\n<tr>\n<td><strong>固收</strong></td>\n<td>利伯蒂钢铁债券折价交易风险仍存</td>\n<td>其高收益公司债（需具体代码）</td>\n</tr>\n<tr>\n<td><strong>大宗</strong></td>\n<td>收购若失败或压制铁矿石短期需求</td>\n<td>新加坡铁矿石期货（SGX）</td>\n</tr>\n<tr>\n<td><strong>外汇</strong></td>\n<td>英镑承压（外资对英工业信心不足）</td>\n<td>GBP/USD空头</td>\n</tr>\n<tr>\n<td><strong>衍生品</strong></td>\n<td>钢铁行业CDS利差走阔对冲工具</td>\n<td>iTraxx Europe Senior Finan.</td>\n</tr>\n</tbody>\n</table>\n</div><li class="list-item level-1"><strong>后续监控</strong></li>
+<li class="list-item level-1"><strong>关键指标</strong>：</li>
+<li class="list-item level-1">贝莱德Q3另类投资报告（验证其对困境资产的配置倾向）。</li>
+<li class="list-item level-1">英国钢铁行业PMI（需求侧验证）。</li>
+<li class="list-item level-1"><strong>行为偏差</strong>：市场可能过度解读“白衣骑士”叙事，忽视古普塔的债务滚雪球风险。</li>
+⚠️ 免责声明：本分析仅供教育参考，不构成任何投资建议。投资有风险，决策需自负盈亏。
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleExpand(button) {
+            const card = button.closest('.analysis-card');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('.expand-icon');
+            const text = button.querySelector('span:last-child');
+            
+            if (full.style.display === 'none') {
+                preview.style.display = 'none';
+                full.style.display = 'block';
+                icon.textContent = '▲';
+                text.textContent = '收起内容';
+                
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                preview.style.display = 'block';
+                full.style.display = 'none';
+                icon.textContent = '▼';
+                text.textContent = '展开更多内容';
+            }
+        }
+    </script>
+</body>
+</html>

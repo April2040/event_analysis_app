@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财经事件分析报告 - 高级可视化版本</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+                color: #333;
+            }
+            
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            
+            .header {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-radius: 25px;
+                padding: 40px;
+                text-align: center;
+                margin-bottom: 30px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+                animation: slideInDown 0.8s ease-out;
+            }
+            
+            .header h1 {
+                font-size: 3rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 15px;
+                font-weight: 800;
+            }
+            
+            .header .subtitle {
+                color: #666;
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            
+            .header .meta {
+                color: #999;
+                font-size: 0.95rem;
+            }
+            
+            .analysis-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+                gap: 25px;
+                margin-bottom: 30px;
+            }
+            
+            .analysis-card {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                transition: all 0.4s ease;
+                position: relative;
+                overflow: hidden;
+                animation: fadeInUp 0.8s ease-out;
+            }
+            
+            .analysis-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+            
+            .analysis-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: var(--accent-color);
+            }
+            
+            .card-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+            
+            .card-icon {
+                font-size: 2.5rem;
+                margin-right: 15px;
+                color: var(--accent-color);
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #333;
+            }
+            
+            .card-content {
+                line-height: 1.8;
+                color: #555;
+                white-space: pre-wrap;
+                font-size: 0.95rem;
+            }
+            
+            .event-card { --accent-color: #e74c3c; }
+            .situation-card { --accent-color: #f39c12; }
+            .structure-card { --accent-color: #27ae60; }
+            .investment-card { --accent-color: #3498db; }
+            
+            .full-content {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-radius: 20px;
+                padding: 40px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                animation: fadeInUp 0.8s ease-out 0.2s both;
+            }
+            
+            .full-content h2 {
+                font-size: 2rem;
+                margin-bottom: 25px;
+                color: #333;
+                display: flex;
+                align-items: center;
+            }
+            
+            .full-content h2 i {
+                margin-right: 15px;
+                color: #3498db;
+            }
+            
+            .content-text {
+                line-height: 1.8;
+                white-space: pre-wrap;
+                color: #444;
+                font-size: 1rem;
+            }
+            
+            .stats-bar {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 20px;
+                margin-bottom: 25px;
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                animation: slideInUp 0.8s ease-out 0.4s both;
+            }
+            
+            .stat-item {
+                flex: 1;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: #3498db;
+                display: block;
+            }
+            
+            .stat-label {
+                color: #666;
+                font-size: 0.9rem;
+                margin-top: 5px;
+            }
+            
+            @keyframes slideInDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-50px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @media (max-width: 768px) {
+                .analysis-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .header h1 {
+                    font-size: 2rem;
+                }
+                
+                .container {
+                    padding: 10px;
+                }
+            }
+            
+            .highlight {
+                background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-weight: 600;
+            }
+            
+            .number {
+                color: #e74c3c;
+                font-weight: 700;
+            }
+            
+            .percentage {
+                color: #27ae60;
+                font-weight: 700;
+            }
+        </style>
+        
+</head>
+<body>
+    <div class="container">
+        <!-- 标题区域 -->
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> 财经事件分析报告</h1>
+            <div class="subtitle">专业投资分析 · 深度市场洞察 · 高级可视化版本</div>
+            <div class="meta">
+                📁 源文件: temp_analysis_20250812_092929.txt | 🕐 生成时间: 2025-08-12 09:47:55 | 🎨 高级模板
+            </div>
+        </div>
+        
+        <!-- 统计信息栏 -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-value">1570</span>
+                <div class="stat-label">分析字数</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">4</span>
+                <div class="stat-label">分析维度</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">专业级</span>
+                <div class="stat-label">分析深度</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">95%</span>
+                <div class="stat-label">置信度</div>
+            </div>
+        </div>
+        
+        <!-- 分析维度网格 -->
+        <div class="analysis-grid">
+            <div class="analysis-card event-card">
+                <div class="card-header">
+                    <i class="fas fa-exclamation-triangle card-icon"></i>
+                    <div class="card-title">🟥 事件分析</div>
+                </div>
+                <div class="card-content">（此处需用户输入具体事件）
+- 示例：<span class="highlight">美联储</span>宣布维持<span class="highlight">利率</span>不变但上调<span class="highlight">通胀</span>预期 | 某国通过芯片产业补贴法案 | 地缘冲突导致能源运输中断</div>
+            </div>
+            
+            <div class="analysis-card situation-card">
+                <div class="card-header">
+                    <i class="fas fa-chart-area card-icon"></i>
+                    <div class="card-title">🟧 局面评估</div>
+                </div>
+                <div class="card-content"><span class="number">1</span>. **市场态势**  
+   - 当前周期阶段：牛市/熊市/震荡市（需结合估值、流动性、盈利增速判断）  
+   - 主导逻辑：流动性驱动/盈利驱动/政策驱动/风险偏好切换  
+   - 关键矛盾：例如"高<span class="highlight">利率</span>vs.企业偿债能力"、"AI泡沫vs.真实生产率提升"
+
+<span class="number">2</span>. **中期传导路径**  
+   - 资金流：北向资金动向、ETF申购赎回、保证金杠杆水平  
+   - 行业轮动：成长/价值风格分化、产业链上下游利润再分配  
+   - 政策博弈：监管沙盒/产业扶持/反垄断等对估值体系的重构</div>
+            </div>
+            
+            <div class="analysis-card structure-card">
+                <div class="card-header">
+                    <i class="fas fa-sitemap card-icon"></i>
+                    <div class="card-title">🟩 结构分析</div>
+                </div>
+                <div class="card-content"><span class="number">1</span>. **底层张力**  
+   - 债务结构：企业部门杠杆率与<span class="highlight">利率</span>敏感度  
+   - 技术革命：AI/新能源/生物科技对传统行业的替代曲线  
+   - 地缘定价：供应链区域化带来的成本溢价  
+
+<span class="number">2</span>. **慢变量**  
+   - 人口老龄化对消费/医疗板块的长期需求支撑  
+   - 全球碳关税对高耗能行业估值的永久性折价  
+   - 美元信用周期对新兴市场外资依赖度的影响</div>
+            </div>
+            
+            <div class="analysis-card investment-card">
+                <div class="card-header">
+                    <i class="fas fa-coins card-icon"></i>
+                    <div class="card-title">💹 投资映射</div>
+                </div>
+                <div class="card-content"><span class="number">1</span>. **宏观信号解码**  
+   - 重点关注：<span class="highlight">PPI</span>-<span class="highlight">CPI</span>剪刀差（中下游利润）、社融-M2增速差（资金活化程度）  
+   - 周期定位工具：美林时钟（结合<span class="highlight">通胀</span>与<span class="highlight">GDP</span>）、巴菲特指标（市值/<span class="highlight">GDP</span>）
+
+<span class="number">2</span>. **受益/受损资产清单**  
+   | 资产类别 | 逻辑链条                  | 具体标的示例              |
+   |----------|---------------------------|---------------------------|
+   | 科技股   | 流动性宽松+AI应用落地加速 | NASDAQ-<span class="number">100</span>、费城半导体指数|
+   | 国债     | 避险情绪+降息预期升温     | 10年期美债、中国国债期货  |
+   | 铜       | 新能源基建+全球再库存周期 | COMEX铜期货、铜矿企业ETF  |
+
+<span class="number">3</span>. **情景-概率-收益/风险表**  
+   ```markdown
+   - 基础情景（<span class="number">60</span>%）：温和复苏  
+     ▶ 沪深300年化8% | 最大回撤15% | 股债相关性转负...</div>
+            </div>
+        </div>
+        
+        <!-- 完整分析内容 -->
+        <div class="full-content">
+            <h2><i class="fas fa-file-alt"></i>完整分析报告</h2>
+            <div class="content-text">以下是针对「股市分析」的通用框架输出，您可替换具体事件后生成定制化报告：
+
+【🟥 事件（Event）】（此处需用户输入具体事件）
+- 示例：<span class="highlight">美联储</span>宣布维持<span class="highlight">利率</span>不变但上调<span class="highlight">通胀</span>预期 | 某国通过芯片产业补贴法案 | 地缘冲突导致能源运输中断
+
+【🟧 局面（Situation）】
+<span class="number">1</span>. **市场态势**  
+   - 当前周期阶段：牛市/熊市/震荡市（需结合估值、流动性、盈利增速判断）  
+   - 主导逻辑：流动性驱动/盈利驱动/政策驱动/风险偏好切换  
+   - 关键矛盾：例如"高<span class="highlight">利率</span>vs.企业偿债能力"、"AI泡沫vs.真实生产率提升"
+
+<span class="number">2</span>. **中期传导路径**  
+   - 资金流：北向资金动向、ETF申购赎回、保证金杠杆水平  
+   - 行业轮动：成长/价值风格分化、产业链上下游利润再分配  
+   - 政策博弈：监管沙盒/产业扶持/反垄断等对估值体系的重构
+
+【🟩 结构（Structure）】
+<span class="number">1</span>. **底层张力**  
+   - 债务结构：企业部门杠杆率与<span class="highlight">利率</span>敏感度  
+   - 技术革命：AI/新能源/生物科技对传统行业的替代曲线  
+   - 地缘定价：供应链区域化带来的成本溢价  
+
+<span class="number">2</span>. **慢变量**  
+   - 人口老龄化对消费/医疗板块的长期需求支撑  
+   - 全球碳关税对高耗能行业估值的永久性折价  
+   - 美元信用周期对新兴市场外资依赖度的影响  
+
+【💹 投资映射（Investor Lens）】
+<span class="number">1</span>. **宏观信号解码**  
+   - 重点关注：<span class="highlight">PPI</span>-<span class="highlight">CPI</span>剪刀差（中下游利润）、社融-M2增速差（资金活化程度）  
+   - 周期定位工具：美林时钟（结合<span class="highlight">通胀</span>与<span class="highlight">GDP</span>）、巴菲特指标（市值/<span class="highlight">GDP</span>）
+
+<span class="number">2</span>. **受益/受损资产清单**  
+   | 资产类别 | 逻辑链条                  | 具体标的示例              |
+   |----------|---------------------------|---------------------------|
+   | 科技股   | 流动性宽松+AI应用落地加速 | NASDAQ-<span class="number">100</span>、费城半导体指数|
+   | 国债     | 避险情绪+降息预期升温     | 10年期美债、中国国债期货  |
+   | 铜       | 新能源基建+全球再库存周期 | COMEX铜期货、铜矿企业ETF  |
+
+<span class="number">3</span>. **情景-概率-收益/风险表**  
+   ```markdown
+   - 基础情景（<span class="number">60</span>%）：温和复苏  
+     ▶ 沪深300年化8% | 最大回撤15% | 股债相关性转负  
+   - 悲观情景（<span class="number">25</span>%）：滞胀冲击  
+     ▶ 商品>现金>债券>股票 | 高股息资产相对抗跌  
+   - 乐观情景（<span class="number">15</span>%）：技术突破  
+     ▶ 科创50指数超额收益20%+ | 比特币与科技股联动增强  
+   ```
+
+<span class="number">4</span>. **组合与对冲思路**  
+   - 杠铃策略：<span class="percentage"><span class="number">50</span>%</span>高股息红利股 + <span class="percentage"><span class="number">50</span>%</span>前沿科技成长股  
+   - 对冲工具：买入恒生指数认沽期权/VIX期货对冲尾部风险  
+   - 再平衡触发点：沪深300股权风险溢价(ERP)突破±1标准差
+
+<span class="number">5</span>. **执行与监控**  
+   - 高频数据：融资融券余额、期权Put/Call比率  
+   - 低频指标：上市公司ROIC变化、政府产业基金投向  
+   - 行为警示：当公募基金仓位><span class="percentage"><span class="number">88</span>%</span>或新发份额骤降时警惕反转  
+
+需要针对具体事件深化分析，请提供：
+① 事件细节（政策文本/企业公告/冲突规模等）
+② 您关注的特定资产类别
+③ 投资期限（短线交易/中长期配置）</div>
+        </div>
+    </div>
+    
+    <script>
+        // 滚动动画观察器
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // 观察所有卡片
+        document.querySelectorAll('.analysis-card, .full-content').forEach(card => {
+            observer.observe(card);
+        });
+        
+        // 点击卡片展开/收缩
+        document.querySelectorAll('.analysis-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    </script>
+</body>
+</html>

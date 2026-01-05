@@ -45,7 +45,7 @@ class DeepSeekClient:
         
         try:
             payload = {
-                "model": "deepseek-chat",
+                "model": "deepseek-reasoner",
                 "messages": [
                     {"role": "user", "content": prompt}
                 ],

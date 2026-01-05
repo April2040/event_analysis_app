@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财经新闻AI深度解读报告</title>
+    <style>
+        
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--gradient-bg);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .timestamp {
+            color: #333;
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-top: 15px;
+        }
+        
+        .news-summary {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .news-summary h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .news-summary p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(650px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .module {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--accent-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .module:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .module-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .module-content {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+        
+        .list-item {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .list-item.level-1 {
+            font-weight: 600;
+            color: var(--primary-color);
+            border-left: 3px solid var(--accent-color);
+            padding-left: 12px;
+        }
+        
+        .list-item.level-2 {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-left: 20px;
+            border-left: 2px solid var(--success-color);
+            padding-left: 10px;
+        }
+        
+        .list-item strong {
+            color: var(--primary-color);
+        }
+        
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 20px 0 15px 0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .section-header.level-1 {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-left-color: #2c3e50;
+            border-width: 4px;
+        }
+        
+        .section-header.level-2 {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            border-left-color: #1e8449;
+            border-width: 3px;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .preview-note {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.95rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-table th {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+        
+        .analysis-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .analysis-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .content-preview {
+            display: block;
+        }
+        
+        .content-full {
+            display: none;
+        }
+        
+        .expand-controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .expand-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .expand-btn:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 财经新闻AI深度解读报告</h1>
+            <p class="subtitle">穿透"热闹"看"门道"，洞察事件底层逻辑，把握投资机会</p>
+            <p class="timestamp">生成时间：2025年09月21日 23:15:36</p>
+        </div>
+        
+        <div class="news-summary">
+            <h2>📰 新闻简介</h2>
+            <p>迪士尼、环球影业和华纳兄弟于2025年9月联合起诉中国AI公司MiniMax，指控其视频生成器"海螺AI"存在"蓄意且公然"的版权侵权行为</p>
+        </div>
+        
+        <div class="main-grid">
+            <div class="module">
+                <div class="module-title">
+                    <span>🟥</span>
+                    <span>事件梳理</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <p>- 迪士尼、环球影业和华纳兄弟于2025年9月联合起诉中国AI公司MiniMax，指控其视频生成器"海螺AI"存在"蓄意且公然"的版权侵权行为</p>
+                        <p>- 这是好莱坞巨头首次联合对中国AI公司发起大规模版权诉讼，标志着内容产业与生成式AI的冲突进入新阶段</p>
+                        <p>- 案件焦点在于AI训练数据来源的合法性边界，以及生成内容版权归属的法律界定</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟧</span>
+                    <span>局面评估</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <p>- 力量对比：好莱坞内容巨头vs中国AI独角兽，背后涉及中美科技与文化产业竞争</p>
+                        <p>- 市场情绪：AI行业面临版权合规压力，投资者对生成式AI公司的法律风险重新定价</p>
+                        <p>- 政策信号：可能加速全球AI监管框架建立，推动"合规数据采购"成为新商业模式</p>
+                        <p>- 中期影响：AI公司训练成本将上升，内容授权市场价值重估，跨国法律冲突常态化</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>🟩</span>
+                    <span>底层逻辑</span>
+                </div>
+                <div class="module-content">
+                    <ul style="list-style: none; padding: 0;">
+                        <p>- 深层张力：数字时代知识产权制度与AI技术发展的根本性冲突</p>
+                        <p>- 产业链重构：内容创作-训练数据-AI生成的价值链分配面临重新洗牌</p>
+                        <p>- 地缘维度：中美科技竞争在知识产权领域的新战场，体现标准制定权争夺</p>
+                        <p>- 长期影响：可能催生"数据权"作为新型生产要素的产权界定和交易机制</p>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="module">
+                <div class="module-title">
+                    <span>💹</span>
+                    <span>投资映射</span>
+                </div>
+                <div class="module-content">
+                    <div class="content-preview">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>投资标的</th>
+                                        <th>影响方向</th>
+                                        <th>时间周期</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>消费相关股权</strong></td>
+                                        <td style="color: #27ae60;">⬆️ 积极正面</td>
+                                        <td>短期&中期</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="content-full" style="display: none;">
+                        <div class="table-container">
+                            <table class="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>资产类别</th>
+                                        <th>逻辑链条</th>
+                                        <th>具体标的/指数</th>
+                                        <th>风险收益评级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>股权</strong></td>
+                                        <td>内容版权方受益于价值重估</td>
+                                        <td>DIS, CMCSA, WBD</td>
+                                        <td>★★★★☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>股权</strong></td>
+                                        <td>AI合规解决方案提供商需求增长</td>
+                                        <td>数据清洁、版权管理公司</td>
+                                        <td>★★★★☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>股权</strong></td>
+                                        <td>中国AI公司面临估值压力</td>
+                                        <td>MiniMax等生成式AI企业</td>
+                                        <td>★★★★☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>固收</strong></td>
+                                        <td>科技高收益债信用利差可能扩大</td>
+                                        <td>AI初创公司债券</td>
+                                        <td>★★★☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>大宗商品</strong></td>
+                                        <td>影响有限</td>
+                                        <td>-</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>外汇</strong></td>
+                                        <td>中美科技摩擦加剧人民币波动</td>
+                                        <td>USD/CNH</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>衍生品</strong></td>
+                                        <td>科技股波动率上升</td>
+                                        <td>VIX相关产品</td>
+                                        <td>★★☆☆☆</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="expand-controls">
+                        <button class="expand-btn" onclick="toggleExpand(this)">
+                            <span class="expand-icon">▼</span>
+                            <span>展开更多内容</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 金融事件分析系统 | 基于标准化模板生成</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleExpand(button) {
+            const card = button.closest('.module');
+            const preview = card.querySelector('.content-preview');
+            const full = card.querySelector('.content-full');
+            const icon = button.querySelector('.expand-icon');
+            const text = button.querySelector('span:last-child');
+            
+            if (full.style.display === 'none') {
+                full.style.display = 'block';
+                preview.style.display = 'none';
+                icon.textContent = '▲';
+                text.textContent = '收起内容';
+                button.classList.add('expanded');
+            } else {
+                full.style.display = 'none';
+                preview.style.display = 'block';
+                icon.textContent = '▼';
+                text.textContent = '展开更多内容';
+                button.classList.remove('expanded');
+            }
+        }
+    </script>
+</body>
+</html>

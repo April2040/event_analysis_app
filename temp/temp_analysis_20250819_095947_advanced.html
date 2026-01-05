@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>好的，我将按照您要求的框架进行结构化分析。以下是一个示例模板，您可提供具体热点事件后，我将生成完整分析：</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            animation: slideInDown 0.8s ease-out;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card-content {
+            line-height: 1.8;
+            color: #555;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        
+        .analysis-card.expanded .card-content {
+            max-height: none;
+        }
+        
+        .expand-hint {
+            text-align: center;
+            margin-top: 15px;
+            color: #888;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+        
+        .full-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInUp 0.8s ease-out 0.4s forwards;
+        }
+        
+        .full-content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .full-content .content {
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap;
+            font-size: 1rem;
+        }
+        
+        .timestamp {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+        }
+        
+        /* 动画定义 */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 颜色主题 */
+        .event { --theme-color: #e74c3c; }
+        .situation { --theme-color: #f39c12; }
+        .structure { --theme-color: #27ae60; }
+        .investment { --theme-color: #3498db; }
+        
+        .event .card-icon { color: #e74c3c; }
+        .situation .card-icon { color: #f39c12; }
+        .structure .card-icon { color: #27ae60; }
+        .investment .card-icon { color: #3498db; }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>好的，我将按照您要求的框架进行结构化分析。以下是一个示例模板，您可提供具体热点事件后，我将生成完整分析：</h1>
+            <div class="subtitle">智能分析 · 专业洞察 · 投资指导</div>
+        </div>
+        
+        <div class="grid">
+            <div class="analysis-card investment">
+                <div class="card-header">
+                    <div class="card-icon">💹</div>
+                    <div class="card-title">💹 投资映射</div>
+                </div>
+                <div class="card-content">【💹 投资映射】  
+1. **宏观信号解码**  
+   - 冲击变量：10年-2年美债利差收窄至-50bp，衰退概率模型升至68%  
+   - 周期定位：晚期扩张向衰退过渡阶段  
+2. **受益/受损资产清单**  
+   | 资产类别 | 逻辑链条 | 具体标的 |  
+   |----------|----------|----------|  
+   | 固收 | 短债收益率见顶+信用利差扩大 | 1-3年期美国国债ETF (SHY) |  
+   | 外汇 | 套息交易平仓加速 | 做多JPY/EM货币篮子 |  
+   | 衍生品 | 波动率期限结构倒挂 | VIX December futures |  
+3. **后续监控**  
+   - 关键数据：美国商业银行C&I贷款增速、日本央行国债购买量  
+   - 行为陷阱：市场过度关注CPI而忽略M2收缩（当前年化-4.3%）  
+请提供您想分析的具体事件，我将生成完整版本。当前案例仅展示分析逻辑。</div>
+                <div class="expand-hint">点击展开完整内容</div>
+            </div>
+        </div>
+        
+        <div class="full-content">
+            <h2>📊 完整分析报告</h2>
+            <div class="content">好的，我将按照您要求的框架进行结构化分析。以下是一个示例模板，您可提供具体热点事件后，我将生成完整分析：
+
+【🟥 表层事件】  
+- 事件：美联储2024年9月FOMC会议宣布维持利率5.25%-5.5%不变，但点阵图显示2025年降息预期从3次缩减至1次  
+- 行动者：美联储主席鲍威尔、FOMC票委、华尔街主要机构  
+- 争议点："higher for longer"政策是否过度牺牲就业市场  
+
+【🟧 博弈局面】  
+- 力量对比：美联储与市场预期存在150bp利差，CME利率期货显示押注冲突  
+- 中期影响：  
+  ✓ 资金流：2年期美债收益率突破5%引发全球资产重定价  
+  ✓ 技术路线：AI算力投资受融资成本压制  
+  ✓ 监管：SEC加速货币市场基金流动性新规  
+
+【🟩 底层逻辑】  
+- 结构张力：美国财政赤字货币化（债务/GDP达130%）与抗通胀目标的根本矛盾  
+- 慢变量：  
+  ✓ 全球美元流动性收缩下新兴市场主权债风险溢价永久性上升  
+  ✓ 企业债市场"堕落天使"（Fallen Angels）规模突破$5000亿阈值  
+
+【💹 投资映射】  
+1. **宏观信号解码**  
+   - 冲击变量：10年-2年美债利差收窄至-50bp，衰退概率模型升至68%  
+   - 周期定位：晚期扩张向衰退过渡阶段  
+
+2. **受益/受损资产清单**  
+   | 资产类别 | 逻辑链条 | 具体标的 |  
+   |----------|----------|----------|  
+   | 固收 | 短债收益率见顶+信用利差扩大 | 1-3年期美国国债ETF (SHY) |  
+   | 外汇 | 套息交易平仓加速 | 做多JPY/EM货币篮子 |  
+   | 衍生品 | 波动率期限结构倒挂 | VIX December futures |  
+
+3. **后续监控**  
+   - 关键数据：美国商业银行C&I贷款增速、日本央行国债购买量  
+   - 行为陷阱：市场过度关注CPI而忽略M2收缩（当前年化-4.3%）  
+
+请提供您想分析的具体事件，我将生成完整版本。当前案例仅展示分析逻辑。</div>
+        </div>
+        
+        <div class="timestamp">
+            📅 生成时间: 2025年08月19日 09:59:47
+        </div>
+    </div>
+    
+    <script>
+        // 滚动动画观察器
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // 观察所有卡片
+        document.querySelectorAll('.analysis-card, .full-content').forEach(card => {
+            observer.observe(card);
+        });
+        
+        // 点击卡片展开/收缩
+        document.querySelectorAll('.analysis-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+            });
+        });
+    </script>
+</body>
+</html>
