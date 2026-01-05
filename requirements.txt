@@ -1,0 +1,35 @@
+# 财经事件分析系统 - 依赖包列表
+# Python 3.11+
+
+# Web框架
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+jinja2>=3.1.2
+python-multipart>=0.0.6
+
+# HTTP请求
+requests>=2.31.0
+httpx>=0.25.0
+
+# HTML解析
+beautifulsoup4>=4.12.0
+lxml>=4.9.3
+html5lib>=1.1
+
+# 文本处理
+jieba>=0.42.1
+python-dateutil>=2.8.2
+
+# 环境变量管理
+python-dotenv>=1.0.0
+
+# AI API客户端
+openai>=1.3.0  # 兼容DeepSeek API
+
+# 新闻爬取（可选）
+newspaper3k>=0.2.8
+feedparser>=6.0.10
+
+# 数据处理
+pandas>=2.1.0
+numpy>=1.24.0
